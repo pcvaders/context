@@ -4,6 +4,30 @@
 
 ---
 
+## [2026-05-22] INGEST — Claude.ai Mobile Sync & Mac Desktop Issues (May 2026)
+
+**Source**: Mobile debugging session notes (Claude.ai mobile)
+**Agent**: Claude Code (claude-sonnet-4-6)
+
+**Pages created (2):**
+- `sources/claude-mobile-sync-issues-2026-05.md` — mobile sync root causes, GitHub bridge confirmation, daemon bug fix, desktop redesign notes
+- `concepts/claude-ai-context-loading.md` — NEW: Project Instructions / CLAUDE.md / hooks pattern for persistent context across surfaces
+
+**Pages updated (1):**
+- `entities/claude-code.md` — May 2026 desktop redesign features, daemon sleep/wake + brew upgrade bugs fixed
+
+**Key facts ingested:**
+- macOS sleep/wake daemon bug patched May 2026 — `brew upgrade claude` to fix
+- Claude.ai session URLs always auth-gated (403 for unauthenticated) — confirmed not a bug
+- Project Instructions = Claude.ai equivalent of SessionStart hook for context loading
+- Desktop redesign: session sidebar, drag-and-drop, integrated terminal, usage button, three view modes [some claims unsourced, verify against release notes]
+
+**Open items:**
+- Verify May 2026 desktop redesign feature list against official release notes
+- Add GitHub raw URL fetch instruction to Claude.ai Project Instructions for aillmwiki project
+
+---
+
 ## [2026-05-22] ARCHITECTURE — GitHub bridge for Claude.ai mobile access
 
 **Problem**: Claude.ai mobile/web cannot read the iCloud Obsidian vault. Three root causes:
