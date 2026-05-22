@@ -4,6 +4,31 @@
 
 ---
 
+## [2026-05-22] ARCHITECTURE — GitHub bridge for Claude.ai mobile access
+
+**Problem**: Claude.ai mobile/web cannot read the iCloud Obsidian vault. Three root causes:
+1. iCloud blocked — Claude.ai has no filesystem MCP access (Claude Code only)
+2. Google Drive MCP reads Google Docs format only, not .md files
+3. "Public link" on Claude Code iPhone = Remote Control sessions — always auth-gated, no truly public share link exists (confirmed via docs)
+
+**Solution**: GitHub as read bridge (`PCGamesplay1/Claude-skills`, public repo)
+- `wiki/index.md` + `wiki/log.md` pushed to main branch
+- Claude.ai can WebFetch raw GitHub URLs (unauthenticated, no MCP needed)
+
+**Raw URLs (live):**
+- `https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki/index.md`
+- `https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki/log.md`
+
+**Files changed:**
+- `~/claude-skills/wiki/sync.sh` — fixed two bugs: VAULT_SUBDIR default (`AI-LLM-Wiki` → `Obsidian Vault Icloud/Obsidian Vault AI`), file source path (`$VAULT/` → `$VAULT/wiki/`)
+- `vault.sh` — added `vault github sync` command; wired as Step 5 in `vault ingest all`
+
+**Sync command:** `vault github sync` (or runs automatically via `vault ingest all`)
+
+**Limitation:** Only index.md and log.md synced. Full wiki requires `copy_if_exists` entries in sync.sh.
+
+---
+
 ## [2026-05-22] INGEST — semantic-clip replaces smart-connections-mcp
 
 **Change**: smart-connections MCP permanently disabled. Replaced by local CLI.
