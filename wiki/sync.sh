@@ -17,22 +17,23 @@ VAULT_PATH="${1:-$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents}"
 # ---------------------------------------------------------------------------
 # Find the vault — adjust VAULT_SUBDIR to match your Obsidian vault name
 # ---------------------------------------------------------------------------
-VAULT_SUBDIR="${VAULT_SUBDIR:-AI-LLM-Wiki}"   # change to your vault folder name
+VAULT_SUBDIR="${VAULT_SUBDIR:-Obsidian Vault Icloud/Obsidian Vault AI}"
+WIKI_SRC="$VAULT_PATH/$VAULT_SUBDIR/wiki"
 VAULT="$VAULT_PATH/$VAULT_SUBDIR"
 
-if [ ! -d "$VAULT" ]; then
-  echo "ERROR: Vault not found at: $VAULT"
-  echo "Set VAULT_SUBDIR env var to your Obsidian vault folder name, or pass the full path as \$1."
+if [ ! -d "$WIKI_SRC" ]; then
+  echo "ERROR: Wiki source not found at: $WIKI_SRC"
+  echo "Set VAULT_SUBDIR env var (relative to iCloud Obsidian base), or pass full vault path as \$1."
   exit 1
 fi
 
-echo "Syncing from: $VAULT"
+echo "Syncing from: $WIKI_SRC"
 
 # ---------------------------------------------------------------------------
 # Copy files — add more entries here as the wiki grows
 # ---------------------------------------------------------------------------
 copy_if_exists() {
-  local src="$VAULT/$1"
+  local src="$WIKI_SRC/$1"
   local dst="$WIKI_DIR/$2"
   if [ -f "$src" ]; then
     cp "$src" "$dst"
