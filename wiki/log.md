@@ -4,6 +4,32 @@
 
 ---
 
+## [2026-05-23] ARCHITECTURE — Claude.ai basic chat wiki auto-load failure documented
+
+**Session**: Manual test — new Claude.ai chat outside any project
+**Agent**: Claude Sonnet 4.6 (claude.ai web)
+
+**Finding**: Wiki auto-load block does not trigger outside the aiLLMwiki project.
+
+**Root causes (3):**
+1. No project system prompt — fetch instruction only executes if present in project instructions
+2. No startup hook — Claude.ai has no mechanism to auto-execute instructions in basic chat
+3. No persistent wiki memory — userMemories contain summarised context only, not wiki contents or auto-load pattern
+
+**Result**: Claude starts blind. No wiki, no log, no open items. Full blank slate.
+
+**Workaround (if outside project):**
+- Manually ask Claude to fetch the raw GitHub URLs
+- Claude can `web_fetch` on demand — just not automatically
+
+**Correct usage:**
+- Always open the **aiLLMwiki project** for wiki-aware sessions
+- Project system prompt is the only reliable auto-load trigger in Claude.ai
+
+**Action**: No code changes required. Behaviour is by design.
+
+---
+
 ## [2026-05-22] INGEST — Claude.ai Mobile Sync & Mac Desktop Issues (May 2026)
 
 **Source**: Mobile debugging session notes (Claude.ai mobile)
@@ -298,9 +324,6 @@ Task → `semantic_search` wiki → find skill → `Skill` tool invokes it
 
 ---
 
----
----
-
 ## [2026-05-22] BASELINE — vault-stats infrastructure deployed
 
 **Script**: `vault-stats.sh` in vault root
@@ -335,8 +358,6 @@ vault-stats --baseline   # write immutable baseline (run once per phase)
 - Token est warn: 100,000 | critical: 200,000
 - Avg page size healthy: 300–2,000 chars (current: 2,696 — slightly above, monitor)
 - Embed delta healthy: ≤ 5
-
----
 
 ---
 
