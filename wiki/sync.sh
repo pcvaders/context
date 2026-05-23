@@ -46,6 +46,11 @@ copy_if_exists() {
 copy_if_exists "index.md"   "index.md"
 copy_if_exists "log.md"     "log.md"
 
+# Pinokio / Windows 11 guides
+mkdir -p "$WIKI_DIR/pinokio/windows-11"
+copy_if_exists "pinokio/Windows 11/claude-code-sync.md"  "pinokio/windows-11/claude-code-sync.md"
+copy_if_exists "pinokio/Windows 11/windows-settings.json" "pinokio/windows-11/windows-settings.json"
+
 # ---------------------------------------------------------------------------
 # Stamp the sync timestamp in index.md
 # ---------------------------------------------------------------------------
