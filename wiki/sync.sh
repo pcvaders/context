@@ -30,11 +30,36 @@ fi
 echo "Syncing from: $WIKI_SRC"
 
 # ---------------------------------------------------------------------------
-# Copy files — add more entries here as the wiki grows
+# Regenerate wiki index from vault if generator script exists
+# ---------------------------------------------------------------------------
+GENERATOR="$VAULT/generate_wiki_index.py"
+if [ -f "$GENERATOR" ]; then
+  echo "  Running generate_wiki_index.py..."
+  python3 "$GENERATOR" || echo "  WARNING: index generator failed, continuing with existing index"
+fi
+
+# ---------------------------------------------------------------------------
+# Rsync full wiki subdirectories (.md files only, mirrors deletions)
+# ---------------------------------------------------------------------------
+for subdir in concepts entities sources syntheses wiki-ha; do
+  if [ -d "$WIKI_SRC/$subdir" ]; then
+    mkdir -p "$WIKI_DIR/$subdir"
+    rsync -a --delete \
+      --include='*/' \
+      --include='*.md' \
+      --exclude='*' \
+      "$WIKI_SRC/$subdir/" "$WIKI_DIR/$subdir/"
+    echo "  synced: $subdir/"
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# Copy root wiki files and path-normalised subdirectories
 # ---------------------------------------------------------------------------
 copy_if_exists() {
   local src="$WIKI_SRC/$1"
   local dst="$WIKI_DIR/$2"
+  mkdir -p "$(dirname "$dst")"
   if [ -f "$src" ]; then
     cp "$src" "$dst"
     echo "  copied: $1 → wiki/$2"
@@ -46,15 +71,16 @@ copy_if_exists() {
 copy_if_exists "index.md"   "index.md"
 copy_if_exists "log.md"     "log.md"
 
-# Pinokio / Windows 11 guides
+# Pinokio / Windows 11 guides (path-normalised: "Windows 11" → "windows-11")
 mkdir -p "$WIKI_DIR/pinokio/windows-11"
 copy_if_exists "pinokio/Windows 11/claude-code-sync.md"  "pinokio/windows-11/claude-code-sync.md"
 copy_if_exists "pinokio/Windows 11/windows-settings.json" "pinokio/windows-11/windows-settings.json"
 
 # ---------------------------------------------------------------------------
-# Stamp the sync timestamp in index.md
+# Stamp the sync timestamp in index.md (handles both footer variants)
 # ---------------------------------------------------------------------------
 TIMESTAMP="$(date -u '+%Y-%m-%d %H:%M UTC')"
+sed -i.bak "s|^Last updated:.*|Last updated: $TIMESTAMP|" "$WIKI_DIR/index.md"
 sed -i.bak "s|> \*\*Last synced\*\*:.*|> **Last synced**: $TIMESTAMP|" "$WIKI_DIR/index.md"
 rm -f "$WIKI_DIR/index.md.bak"
 
