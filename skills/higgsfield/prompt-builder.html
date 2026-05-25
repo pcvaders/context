@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Higgsfield Prompt Builder</title>
+<style>
+  :root {
+    --bg:#0d0d0d; --bg2:#141414; --bg3:#1c1c1c;
+    --border:#2a2a2a; --border2:#383838;
+    --amber:#f5a623; --amber-dim:#c47d0e;
+    --text:#e8e8e8; --text-dim:#888; --text-mute:#555;
+    --red:#c0392b; --green:#27ae60; --blue:#3498db;
+    --radius:4px; --font-mono:'Courier New',Courier,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;}
+  .brand{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--amber);}
+  .mode-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .mode-btn{padding:6px 24px;background:transparent;border:none;color:var(--text-dim);font-size:11px;font-weight:700;letter-spacing:.12em;cursor:pointer;transition:background .15s,color .15s;}
+  .mode-btn.active{background:var(--amber);color:#000;}
+  .header-actions{display:flex;gap:8px;align-items:center;}
+  .btn-sm{padding:5px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text-dim);font-size:11px;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:border-color .15s,color .15s;}
+  .btn-sm:hover{border-color:var(--amber);color:var(--amber);}
+  .btn-amber{background:var(--amber);border-color:var(--amber);color:#000;}
+  .btn-amber:hover{background:var(--amber-dim);border-color:var(--amber-dim);color:#000;}
+  .btn-gear{padding:5px 10px;font-size:14px;line-height:1;}
+  .provider-pill{font-size:10px;color:var(--text-mute);border:1px solid var(--border);border-radius:20px;padding:3px 8px;letter-spacing:.06em;}
+
+  /* Main layout */
+  .main{display:grid;grid-template-columns:560px 1fr;flex:1;overflow:hidden;}
+
+  /* Left panel */
+  .left-panel{border-right:1px solid var(--border);overflow-y:auto;}
+  .left-panel::-webkit-scrollbar{width:4px;}
+  .left-panel::-webkit-scrollbar-track{background:var(--bg);}
+  .left-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+  /* Sections */
+  .section{border-bottom:1px solid var(--border);}
+  .section-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none;transition:background .1s;}
+  .section-header:hover{background:var(--bg2);}
+  .section-title{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--text-dim);}
+  .section-icon{width:18px;height:18px;border:1px solid var(--border2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--amber);flex-shrink:0;}
+  .section-chevron{font-size:10px;color:var(--text-mute);transition:transform .2s;}
+  .section.open .section-chevron{transform:rotate(180deg);}
+  .section-body{display:none;padding:4px 20px 18px;}
+  .section.open .section-body{display:block;}
+
+  /* Form fields */
+  .field{margin-top:14px;}
+  .field-label{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--amber);margin-bottom:6px;}
+  .field-hint{font-size:10px;color:var(--text-mute);margin-top:4px;line-height:1.5;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+  .field-row .field{margin-top:0;}
+  textarea,input[type="text"],input[type="password"],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;padding:8px 10px;outline:none;transition:border-color .15s;font-family:inherit;}
+  textarea:focus,input[type="text"]:focus,input[type="password"]:focus,select:focus{border-color:var(--amber);}
+  textarea{resize:vertical;min-height:72px;}
+  textarea::placeholder,input::placeholder{color:var(--text-mute);}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23555'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer;}
+  select option{background:var(--bg3);}
+
+  /* Tags */
+  .tag-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .tag{padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--text-dim);cursor:pointer;transition:background .1s,border-color .1s,color .1s;user-select:none;}
+  .tag:hover{border-color:var(--border2);color:var(--text);}
+  .tag.selected{background:var(--amber);border-color:var(--amber);color:#000;font-weight:700;}
+
+  /* Photodump grid */
+  .photodump-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px;}
+  .photodump-item{padding:6px 4px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:10px;color:var(--text-dim);text-align:center;cursor:pointer;transition:border-color .1s,color .1s;user-select:none;line-height:1.3;}
+  .photodump-item:hover{border-color:var(--border2);color:var(--text);}
+  .photodump-item.selected{border-color:var(--amber);color:var(--amber);background:rgba(245,166,35,.08);}
+
+  /* Toggle */
+  .toggle{position:relative;width:40px;height:22px;cursor:pointer;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-slider{position:absolute;inset:0;background:var(--bg3);border:1px solid var(--border2);border-radius:22px;transition:background .2s;}
+  .toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:2px;top:2px;background:var(--text-mute);border-radius:50%;transition:transform .2s,background .2s;}
+  .toggle input:checked+.toggle-slider{background:var(--amber);border-color:var(--amber);}
+  .toggle input:checked+.toggle-slider::before{transform:translateX(18px);background:#000;}
+  .toggle-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+  .toggle-label{font-size:11px;color:var(--text-mute);}
+
+  /* Ref2V slots */
+  .ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+  .ref-slot{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:8px;}
+  .ref-slot-tag{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--amber);margin-bottom:4px;}
+  .ref-slot input{font-size:11px;padding:4px 6px;}
+  .ref-slot-tag.video{color:var(--blue);}
+  .ref-slot-tag.audio{color:var(--green);}
+
+  /* Right panel */
+  .right-panel{display:flex;flex-direction:column;overflow:hidden;}
+
+  /* Tab bar */
+  .tab-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;}
+  .tab-btn{flex:1;padding:10px;background:transparent;border:none;color:var(--text-mute);font-size:10px;font-weight:700;letter-spacing:.12em;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+  .tab-btn:hover{color:var(--text-dim);}
+  .tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
+  .tab-pane{display:none;flex:1;flex-direction:column;overflow:hidden;}
+  .tab-pane.active{display:flex;}
+
+  /* Prompt tab */
+  .prompt-section{flex:1;display:flex;flex-direction:column;padding:20px;overflow:hidden;}
+  .prompt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .prompt-label-tag{background:var(--amber);color:#000;font-size:10px;font-weight:700;letter-spacing:.12em;padding:4px 10px;border-radius:var(--radius);}
+  .prompt-actions-row{display:flex;gap:8px;}
+  #prompt-output{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-mono);font-size:13px;line-height:1.7;padding:16px;resize:none;outline:none;overflow-y:auto;min-height:140px;}
+  #prompt-output::-webkit-scrollbar{width:4px;}
+  #prompt-output::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+  .char-count{font-size:10px;color:var(--text-mute);text-align:right;margin-top:6px;}
+  .framework-hint{font-size:10px;color:var(--text-mute);margin-top:6px;padding:8px;background:var(--bg3);border-radius:var(--radius);border-left:2px solid var(--amber);display:none;}
+
+  /* Grounding bar */
+  .grounding-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .grounding-label{display:flex;align-items:center;gap:10px;}
+  .grounding-icon{width:28px;height:28px;border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-mute);}
+  .grounding-text{font-size:12px;font-weight:600;}
+  .grounding-sub{font-size:10px;color:var(--text-mute);}
+
+  /* AI Expand tab */
+  .expand-panel{flex:1;display:flex;flex-direction:column;padding:20px;gap:14px;overflow-y:auto;}
+  .expand-panel::-webkit-scrollbar{width:4px;}
+  .expand-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+  .expand-header{display:flex;align-items:center;justify-content:space-between;}
+  .expand-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--amber);}
+  .provider-status{font-size:10px;color:var(--text-mute);display:flex;align-items:center;gap:6px;}
+  .provider-dot{width:6px;height:6px;border-radius:50%;background:var(--text-mute);}
+  .provider-dot.ready{background:var(--green);}
+  .expand-framework-row{display:flex;gap:8px;align-items:center;}
+  .expand-framework-row label{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text-dim);white-space:nowrap;}
+  .expand-btn{padding:10px;background:var(--amber);border:none;border-radius:var(--radius);color:#000;font-size:12px;font-weight:800;letter-spacing:.1em;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;flex-shrink:0;}
+  .expand-btn:hover{background:var(--amber-dim);}
+  .expand-btn:disabled{background:var(--bg3);border:1px solid var(--border2);color:var(--text-mute);cursor:not-allowed;}
+  .expand-result{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--text);min-height:120px;overflow-y:auto;flex:1;white-space:pre-wrap;}
+  .expand-result.empty{color:var(--text-mute);font-family:inherit;font-size:12px;}
+  .expand-result-actions{display:flex;gap:8px;}
+  .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .error-msg{color:#e74c3c;font-size:11px;padding:8px;background:rgba(192,57,43,.1);border-radius:var(--radius);border:1px solid rgba(192,57,43,.3);}
+
+  /* Shot Brief tab */
+  .brief-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  .brief-scroll{flex:1;overflow-y:auto;padding:20px;}
+  .brief-scroll::-webkit-scrollbar{width:4px;}
+  .brief-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+  .brief-section-title{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--amber);margin-bottom:10px;}
+  .ref-upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+  .ref-upload-slot{background:var(--bg3);border:1px dashed var(--border2);border-radius:var(--radius);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s;position:relative;overflow:hidden;}
+  .ref-upload-slot:hover{border-color:var(--amber);}
+  .ref-upload-slot.has-img{border-style:solid;border-color:var(--border2);}
+  .ref-upload-slot img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+  .ref-slot-label{position:absolute;top:4px;left:4px;font-size:9px;font-weight:700;letter-spacing:.08em;background:rgba(0,0,0,.8);padding:2px 5px;border-radius:2px;z-index:1;}
+  .ref-slot-label.img-tag{color:var(--amber);}
+  .ref-slot-clear{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.8);border:none;color:var(--text-dim);cursor:pointer;font-size:11px;padding:2px 5px;border-radius:2px;z-index:1;display:none;}
+  .ref-upload-slot.has-img .ref-slot-clear{display:block;}
+  .ref-upload-icon{font-size:18px;color:var(--text-mute);}
+  .ref-upload-text{font-size:9px;color:var(--text-mute);margin-top:4px;}
+  .brief-prompt-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;font-family:var(--font-mono);font-size:12px;line-height:1.7;min-height:100px;white-space:pre-wrap;margin-bottom:14px;color:var(--text);}
+  .tech-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .tech-item-label{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--text-mute);}
+  .tech-item-val{font-size:12px;color:var(--text);margin-top:2px;}
+  .brief-footer{padding:14px 20px;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:8px;flex-shrink:0;}
+
+  /* Footer controls */
+  .footer-controls{display:grid;grid-template-columns:120px 1fr 280px;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0;}
+  .footer-cell{background:var(--bg2);padding:12px 20px;display:flex;align-items:center;}
+  .resolution-select{display:flex;align-items:center;gap:8px;}
+  .res-tag{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:4px 12px;font-size:12px;font-weight:700;color:var(--text);cursor:pointer;}
+  .res-tag.active{border-color:var(--amber);color:var(--amber);}
+  .price-bar{padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg2);}
+  .price-est{font-size:11px;color:var(--text-mute);}
+  #queue-btn{width:100%;padding:14px;background:var(--amber);border:none;border-radius:var(--radius);color:#000;font-size:13px;font-weight:800;letter-spacing:.12em;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  #queue-btn:hover{background:var(--amber-dim);}
+
+  /* Modals */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:6px;width:480px;max-height:80vh;display:flex;flex-direction:column;}
+  .modal-wide{width:560px;}
+  .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--amber);}
+  .modal-close{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;line-height:1;}
+  .modal-body{padding:16px 20px;overflow-y:auto;flex:1;}
+  .modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+  .modal-footer input{flex:1;}
+  .preset-list{display:flex;flex-direction:column;gap:8px;}
+  .preset-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;}
+  .preset-item:hover{border-color:var(--amber);}
+  .preset-name{font-size:12px;font-weight:600;}
+  .preset-meta{font-size:10px;color:var(--text-mute);}
+  .preset-item-actions{display:flex;gap:6px;}
+
+  /* Settings modal specifics */
+  .settings-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .settings-row label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--amber);min-width:80px;flex-shrink:0;}
+  .settings-row input,.settings-row select{flex:1;}
+  .settings-note{font-size:10px;color:var(--text-mute);line-height:1.5;margin-bottom:14px;padding:8px;background:var(--bg3);border-radius:var(--radius);}
+  .settings-divider{height:1px;background:var(--border);margin:16px 0;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:10px 16px;font-size:12px;color:var(--text);z-index:200;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateY(0);}
+  .toast.success{border-color:var(--green);color:var(--green);}
+  .divider{height:1px;background:var(--border);margin:14px 0 0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">⬡ HIGGSFIELD PROMPT BUILDER</div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="setMode('image')">IMAGE</button>
+    <button class="mode-btn" onclick="setMode('video')">VIDEO</button>
+  </div>
+  <div class="header-actions">
+    <span class="provider-pill" id="header-provider">No provider</span>
+    <button class="btn-sm" onclick="clearAll()">CLEAR</button>
+    <button class="btn-sm" onclick="openModal('load')">LOAD PRESET</button>
+    <button class="btn-sm btn-amber" onclick="openModal('save')">SAVE PRESET</button>
+    <button class="btn-sm btn-gear" onclick="openSettings()" title="AI Provider Settings">⚙</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="left-panel">
+
+    <!-- 00 Prompt Framework -->
+    <div class="section" id="sec-framework">
+      <div class="section-header" onclick="toggleSection('sec-framework')">
+        <div class="section-title"><div class="section-icon">❋</div>00. PROMPT FRAMEWORK</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">STRUCTURE</label>
+          <select id="sel-framework" onchange="onFrameworkChange()">
+            <option value="">None — free-form</option>
+            <option value="five-segment">Five-Segment (Opening · Subject · Action · Context · Close)</option>
+            <option value="craft">CRAFT (Context · Reference · Action · Framing · Tone)</option>
+            <option value="timeline">Timeline Storyboard (timestamped beats)</option>
+          </select>
+        </div>
+        <div class="field framework-hint" id="framework-hint"></div>
+        <div class="field" id="timeline-beats-field" style="display:none">
+          <label class="field-label">TIMELINE BEATS</label>
+          <textarea id="timeline-beats" placeholder="[0:00] Opening wide shot&#10;[0:03] Subject enters frame&#10;[0:06] Close-up reaction&#10;[0:09] Pull back reveal" oninput="buildPrompt()" style="min-height:100px"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 01 Model -->
+    <div class="section open" id="sec-model">
+      <div class="section-header" onclick="toggleSection('sec-model')">
+        <div class="section-title"><div class="section-icon">M</div>01. MODEL</div>
+        <span class="section-chevron">▲</span>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">SELECTED MODEL</label>
+          <select id="sel-model" onchange="onModelChange()">
+            <option value="">— Select model —</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">RENDER TIER</label>
+            <select id="sel-render-tier" onchange="buildPrompt()">
+              <option value="">— Default —</option>
+              <option value="fast">Fast — 480p draft (~30–90s)</option>
+              <option value="pro">Pro — 1080p final</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">START / END FRAME</label>
+            <select id="sel-frame-control" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option value="start">Start Frame locked</option>
+              <option value="end">End Frame locked</option>
+              <option value="both">Both frames locked</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" id="soul-id-field" style="display:none">
+          <label class="field-label">SOUL ID</label>
+          <input type="text" id="soul-id" placeholder="Enter Soul ID or paste reference ID…" oninput="buildPrompt()">
+        </div>
+        <div class="field" id="motion-control-field" style="display:none">
+          <label class="field-label">MOTION CONTROL PRESET</label>
+          <select id="sel-motion-control" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <option>Dolly In + Dutch Angle (tension / instability)</option>
+            <option>Crane Up + 360 Orbit (epic reveal / isolation)</option>
+            <option>FPV Drone + Crash Zoom In (kinetic / sudden focus)</option>
+            <option>Handheld + Action Run (raw realism / pursuit)</option>
+          </select>
+        </div>
+        <div class="field" id="veo-grounding-field" style="display:none">
+          <label class="field-label">GOOGLE SEARCH GROUNDING</label>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="veo-grounding" onchange="buildPrompt()"><span class="toggle-slider"></span></label>
+            <span class="toggle-label">Research context from web before generation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Subject & Action -->
+    <div class="section open" id="sec-subject">
+      <div class="section-header" onclick="toggleSection('sec-subject')">
+        <div class="section-title"><div class="section-icon">S</div>02. SUBJECT & ACTION</div>
+        <span class="section-chevron">▲</span>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">SUBJECT DESCRIPTION</label>
+          <textarea id="subject" placeholder="E.g., A woman in a black trench coat, 30s, sharp eyes…" oninput="buildPrompt()"></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">ACTION / WHAT HAPPENS</label>
+          <textarea id="action" placeholder="E.g., Turns slowly toward camera, raises one hand to shield eyes from light…" oninput="buildPrompt()"></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">BODY LANGUAGE</label>
+            <select id="sel-body" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Upright, confident</option><option>Tense, coiled</option><option>Relaxed, open</option>
+              <option>Hunched, closed</option><option>Squared-off, confrontational</option>
+              <option>Arms crossed</option><option>Arms open / raised</option>
+              <option>Weight forward</option><option>Weight back</option>
+              <option>Eyes cast down</option><option>Direct eye contact</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">MOVEMENT QUALITY</label>
+            <select id="sel-movement" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Fluid</option><option>Jerky</option><option>Precise</option><option>Hesitant</option>
+              <option>Confident</option><option>Stumbling</option><option>Slow-motion</option>
+              <option>Overcranked (high fps)</option><option>Undercranked (low fps)</option>
+              <option>Natural</option><option>Mechanical</option><option>Animal-like</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">ENVIRONMENT</label>
+          <input type="text" id="environment" placeholder="E.g., Rainy London bus stop at night…" oninput="buildPrompt()">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">TIME OF DAY</label>
+            <select id="sel-timeofday" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Dawn</option><option>Golden hour</option><option>Midday</option>
+              <option>Overcast day</option><option>Blue hour</option><option>Night</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">WEATHER / ATMOSPHERE</label>
+            <select id="sel-weather" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Rain</option><option>Fog / mist</option><option>Snow</option>
+              <option>Heat haze</option><option>Wind</option><option>Dust / smoke</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Camera -->
+    <div class="section open" id="sec-camera">
+      <div class="section-header" onclick="toggleSection('sec-camera')">
+        <div class="section-title"><div class="section-icon">C</div>03. CAMERA</div>
+        <span class="section-chevron">▲</span>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">SHOT SIZE</label>
+            <select id="sel-shot-size" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Extreme Long Shot (ELS)</option><option>Long Shot / Wide Shot</option>
+              <option>Medium Long Shot / Cowboy</option><option>Medium Wide (MWS)</option>
+              <option>Medium Shot (MS)</option><option>Medium Close-Up (MCU)</option>
+              <option>Close-Up (CU)</option><option>Extreme Close-Up (ECU)</option><option>Insert Shot</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">CAMERA ANGLE</label>
+            <select id="sel-angle" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Eye Level</option><option>Low Angle</option><option>High Angle</option>
+              <option>Bird's-Eye View</option><option>Worm's-Eye View</option><option>Ground Level</option>
+              <option>Canted Angle Left</option><option>Canted Angle Right</option>
+              <option>Over-the-Shoulder (OTS)</option><option>POV / First Person</option>
+              <option>Two-Shot</option><option>Cowboy Shot</option><option>Overhead</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">CAMERA MOVEMENT</label>
+          <select id="sel-camera-move" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <optgroup label="Dolly">
+              <option>Dolly In</option><option>Dolly Out</option><option>Dolly Left</option><option>Dolly Right</option>
+              <option>Dolly Zoom In</option><option>Dolly Zoom Out</option><option>Super Dolly In</option><option>Super Dolly Out</option>
+            </optgroup>
+            <optgroup label="Crane / Vertical">
+              <option>Crane Up</option><option>Crane Down</option><option>Crane Over The Head</option><option>Levitation</option>
+            </optgroup>
+            <optgroup label="Orbit / Arc">
+              <option>360 Orbit</option><option>Arc</option><option>Lazy Susan</option><option>Robo Arm</option>
+            </optgroup>
+            <optgroup label="Follow / Action">
+              <option>FPV Drone</option><option>Action Run</option><option>Handheld</option><option>Head Tracking</option><option>Snorricam</option>
+            </optgroup>
+            <optgroup label="Specialty / Cinematic">
+              <option>Bullet Time</option><option>Dutch Angle</option><option>Fisheye</option>
+              <option>Whip Pan</option><option>Crash Zoom In</option><option>Crash Zoom Out</option>
+            </optgroup>
+            <optgroup label="Time-Based">
+              <option>Hyperlapse</option><option>Timelapse Human</option><option>Timelapse Landscape</option><option>Low Shutter</option>
+            </optgroup>
+            <optgroup label="Through-Object">
+              <option>Through Object In</option><option>Through Object Out</option><option>Mouth In</option>
+            </optgroup>
+            <optgroup label="Vehicle / Action">
+              <option>Car Chasing</option><option>Car Grip</option><option>Buckle Up</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">LENS BEHAVIOUR</label>
+          <select id="sel-lens" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <option>Shallow depth of field</option><option>Rack focus</option><option>Focus-breathing</option>
+            <option>Bokeh silhouette</option><option>Lens plane crossing</option><option>Anamorphic lens rendering</option>
+          </select>
+        </div>
+        <div class="field video-only" id="lens-switch-field" style="display:none">
+          <label class="field-label">LENS SWITCH (Seedance)</label>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="lens-switch-toggle" onchange="onLensSwitchChange()"><span class="toggle-slider"></span></label>
+            <span class="toggle-label">In-generation cut (zero morphing)</span>
+          </div>
+          <div id="lens-switch-target" style="display:none;margin-top:8px">
+            <select id="sel-lens-switch-size" onchange="buildPrompt()">
+              <option value="">— Target shot size —</option>
+              <option>Extreme Long Shot</option><option>Wide Shot</option><option>Medium Shot</option>
+              <option>Close-Up</option><option>Extreme Close-Up</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Lighting & Mood -->
+    <div class="section" id="sec-lighting">
+      <div class="section-header" onclick="toggleSection('sec-lighting')">
+        <div class="section-title"><div class="section-icon">☀</div>04. LIGHTING & MOOD</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">PRODUCER BRAND DNA</label>
+          <select id="sel-producer-dna" onchange="applyProducerDNA()">
+            <option value="">— None —</option>
+            <optgroup label="Blockbuster">
+              <option value="bruckheimer">Bruckheimer — Teal-orange · Rim lighting · Rapid cut</option>
+              <option value="bay">Bay — Lens flare · Extreme low angle · Warm epic</option>
+              <option value="cameron">Cameron — Photorealistic CGI · Deep saturated blue · Epic scale</option>
+            </optgroup>
+            <optgroup label="Prestige / Auteur">
+              <option value="nolan">Nolan/Thomas — IMAX large-format · Practical FX · Minimal CGI · Chiaroscuro</option>
+              <option value="spielberg">Spielberg — Amblin warm diffusion · Close-up reactions · Backlit wonder</option>
+              <option value="scorsese">Scorsese — Tracking shots · Gritty noir · Natural / practical light</option>
+              <option value="fincher">Fincher — Desaturated cold · Precision framing · Low fill</option>
+              <option value="villeneuve">Villeneuve — Sparse composition · Natural light · Contemplative wide</option>
+              <option value="wong">Wong Kar-wai — Neon-drenched · Warm blur · Underexposed shadows</option>
+            </optgroup>
+            <optgroup label="Iconic Style">
+              <option value="kurosawa">Kurosawa — High contrast · Wipe transitions · Directional line-of-sight</option>
+              <option value="lynch">Lynch — Deep shadow · Uncanny warmth · Slow dread</option>
+              <option value="tarantino">Tarantino — Warm tungsten · Trunk shots · Stylized tableau</option>
+              <option value="phillips">Phillips — Neon desaturated · Handheld · Used Future</option>
+              <option value="kennedy">Kennedy/Lucas — Used Future · Mythic wide · Warm analog</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">LIGHTING TYPE</label>
+            <select id="sel-lighting" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Golden hour / Magic hour</option><option>Blue hour</option>
+              <option>Rembrandt lighting</option><option>Butterfly / Paramount lighting</option>
+              <option>Split lighting</option><option>Rim lighting / backlit</option>
+              <option>Motivated lighting</option><option>Practical lighting</option>
+              <option>Chiaroscuro</option><option>High-key</option><option>Low-key</option>
+              <option>Neon</option><option>Volumetric</option><option>Side-lit</option>
+              <option>Hard light</option><option>Soft light</option>
+              <option>Overcast / Softbox</option><option>Harsh midday sun</option>
+              <option>Warm tungsten</option><option>Deep shadow fill</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">COLOR GRADE</label>
+            <select id="sel-grade" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Cold thriller</option><option>Warm nostalgia</option><option>Cyberpunk</option>
+              <option>Horror</option><option>Romance</option><option>Documentary</option>
+              <option>Epic fantasy</option><option>Noir</option><option>Sci-fi cold</option>
+              <option>Post-apocalyptic</option>
+              <option>Teal-orange blockbuster</option><option>Used Future</option>
+              <option>MTV Aesthetic</option><option>Amblin Warm Diffusion</option>
+              <option>Chiaroscuro Realism</option><option>Neon Desaturated</option>
+              <option>IMAX Epic</option><option>Desaturated precision</option>
+              <option>Warm analog grain</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Style & Aesthetics -->
+    <div class="section" id="sec-style">
+      <div class="section-header" onclick="toggleSection('sec-style')">
+        <div class="section-title"><div class="section-icon">✦</div>05. STYLE & AESTHETICS</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">VISUAL STYLE</label>
+            <select id="sel-style" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Cinematic</option><option>VHS</option><option>Super 8MM</option>
+              <option>Anamorphic</option><option>Abstract</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">FILM STOCK</label>
+            <select id="sel-film" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Kodak Portra 400</option><option>Fuji Velvia</option>
+              <option>Kodak Vision3 500T</option><option>Ilford HP5</option><option>Kodak Ektachrome</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">ASPECT RATIO</label>
+          <select id="sel-aspect" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <option>16:9 (Widescreen)</option><option>9:16 (Vertical)</option>
+            <option>2.35:1 (Anamorphic)</option><option>1:1 (Square)</option>
+            <option>4:5 (Portrait)</option><option>4:3 (Classic TV)</option><option>21:9 (Ultrawide)</option>
+          </select>
+        </div>
+        <div class="field image-only" id="photodump-section" style="display:none">
+          <label class="field-label">PHOTODUMP STYLE PRESET</label>
+          <div class="photodump-grid" id="photodump-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Emotion & Performance (VIDEO only) -->
+    <div class="section video-only" id="sec-emotion" style="display:none">
+      <div class="section-header" onclick="toggleSection('sec-emotion')">
+        <div class="section-title"><div class="section-icon">◈</div>06. EMOTION & PERFORMANCE</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">EMOTION REGISTER</label>
+            <select id="sel-emotion" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Anger / rage / tension / on edge</option><option>Calm / control / confidence</option>
+              <option>Sadness / vulnerability</option><option>Shock / revelation</option>
+              <option>Action</option><option>Final beat / verdict</option>
+              <option>Emotional breakdown / character needs space</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">MICRO-EXPRESSION</label>
+            <select id="sel-microexp" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Deadpan Neutral</option><option>Fierce Focus</option><option>Suppressed Smile</option>
+              <option>Quiet Devastation</option><option>Cold Calculation</option><option>Bitter Amusement</option>
+              <option>Frozen Shock</option><option>Simmering Rage</option><option>Vulnerable Openness</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">EMOTION CHANNELS <span style="color:var(--text-mute);font-weight:400">(select multiple)</span></label>
+          <div class="tag-group" id="emotion-channels"></div>
+        </div>
+        <div class="field seedance-only" id="seedance-archetype-field" style="display:none">
+          <label class="field-label">SEEDANCE SCENE ARCHETYPE</label>
+          <select id="sel-seedance-archetype" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <optgroup label="Action"><option>Pursuit</option><option>Duel</option><option>Impact</option></optgroup>
+            <optgroup label="General"><option>Journey</option><option>Atmosphere</option><option>Reveal</option></optgroup>
+            <optgroup label="Dialogue"><option>Confrontation</option><option>Interrogation</option><option>Negotiation</option></optgroup>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 Multimodal Refs (Seedance / Ref2V) VIDEO only -->
+    <div class="section video-only seedance-only" id="sec-ref2v" style="display:none">
+      <div class="section-header" onclick="toggleSection('sec-ref2v')">
+        <div class="section-title"><div class="section-icon">@</div>07. MULTIMODAL REFS (Ref2V)</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field-hint" style="margin-top:0;margin-bottom:10px">Tag references directly in your prompt. Seedance supports up to 9 images, 3 videos, 3 audio clips.</div>
+        <div class="field">
+          <label class="field-label">IMAGE REFERENCES (@Image1–9)</label>
+          <div class="ref-grid" id="ref-image-grid"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">VIDEO REFS (@Video1–3)</label>
+            <div id="ref-video-grid"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">AUDIO REFS (@Audio1–3)</label>
+            <div id="ref-audio-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 Audio (VIDEO only) -->
+    <div class="section video-only" id="sec-audio" style="display:none">
+      <div class="section-header" onclick="toggleSection('sec-audio')">
+        <div class="section-title"><div class="section-icon">♪</div>08. AUDIO</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">SOUND TYPE</label>
+            <select id="sel-audio-type" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Ambient</option><option>Weather</option><option>Movement</option>
+              <option>Mechanical</option><option>Human</option><option>Music cue</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">SOUND DESCRIPTION</label>
+            <input type="text" id="audio-desc" placeholder="E.g., Low bass drone, electronic pulse…" oninput="buildPrompt()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 Advanced -->
+    <div class="section" id="sec-advanced">
+      <div class="section-header" onclick="toggleSection('sec-advanced')">
+        <div class="section-title"><div class="section-icon">⚙</div>09. ADVANCED</div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">NARRATIVE TYPE</label>
+            <select id="sel-narrative" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Text-to-Video (T2V)</option><option>Image-to-Video (I2V)</option>
+              <option>Fluid Narrative</option><option>Timestamped</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">GENRE</label>
+            <select id="sel-genre" onchange="buildPrompt()">
+              <option value="">— None —</option>
+              <option>Product / E-commerce</option><option>Lifestyle / Social</option>
+              <option>Drama / Narrative</option><option>Music Video</option>
+              <option>Landscape / Travel</option><option>Commercial / Brand</option><option>Anime / Artistic</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">SPATIAL ZONE</label>
+          <select id="sel-spatial" onchange="buildPrompt()">
+            <option value="">— None —</option>
+            <optgroup label="Thirds"><option>Left third</option><option>Center third</option><option>Right third</option></optgroup>
+            <optgroup label="Depth"><option>Foreground plane</option><option>Midground</option><option>Background</option></optgroup>
+            <optgroup label="Asymmetric"><option>Right two-thirds / left void</option><option>Left two-thirds / right void</option></optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">ADDITIONAL NOTES</label>
+          <textarea id="notes" placeholder="Extra directives, negative constraints, timing marks…" oninput="buildPrompt()" style="min-height:56px"></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left-panel -->
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <div class="right-panel">
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="setTab('prompt')">PROMPT</button>
+      <button class="tab-btn" onclick="setTab('expand')">AI EXPAND</button>
+      <button class="tab-btn" onclick="setTab('brief')">SHOT BRIEF</button>
+    </div>
+
+    <!-- ── Tab: PROMPT ── -->
+    <div class="tab-pane active" id="tab-prompt">
+      <div class="prompt-section">
+        <div class="prompt-header">
+          <span class="prompt-label-tag">CONSTRUCTED PROMPT</span>
+          <div class="prompt-actions-row">
+            <button class="btn-sm" onclick="editToggle()">✎ EDIT</button>
+            <button class="btn-sm" onclick="copyPrompt()">⎘ COPY</button>
+            <button class="btn-sm" onclick="copySceneJson()">{ } JSON</button>
+            <button class="btn-sm" onclick="sendToExpand()">→ EXPAND</button>
+          </div>
+        </div>
+        <textarea id="prompt-output" readonly placeholder="Fill in fields on the left — your prompt builds here in real time."></textarea>
+        <div class="char-count"><span id="char-count">0</span> characters</div>
+      </div>
+
+      <div class="grounding-bar" id="grounding-bar" style="display:none">
+        <div class="grounding-label">
+          <div class="grounding-icon">🔍</div>
+          <div><div class="grounding-text">GOOGLE SEARCH GROUNDING</div><div class="grounding-sub">Research context before generation</div></div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="veo-grounding-right" onchange="syncGrounding(this)"><span class="toggle-slider"></span></label>
+      </div>
+
+      <div class="footer-controls">
+        <div class="footer-cell">
+          <div class="resolution-select">
+            <span id="res-1k" class="res-tag active" onclick="setRes('1K')">1K</span>
+            <span id="res-2k" class="res-tag" onclick="setRes('2K')">2K</span>
+            <span id="res-4k" class="res-tag" onclick="setRes('4K')">4K</span>
+          </div>
+        </div>
+        <div class="footer-cell" style="justify-content:center">
+          <span style="font-size:10px;color:var(--text-mute);letter-spacing:.1em">SESSION: $0.00</span>
+        </div>
+        <div class="footer-cell" style="padding:10px 16px">
+          <button id="queue-btn" onclick="queueGenerate()">
+            <span id="queue-label">QUEUE IMAGE</span><span>✦</span>
+          </button>
+        </div>
+      </div>
+      <div class="price-bar">
+        <span class="price-est">$ Est. cost depends on model and resolution</span>
+        <span style="font-size:10px;color:var(--text-mute)" id="active-model-label">No model selected</span>
+      </div>
+    </div>
+
+    <!-- ── Tab: AI EXPAND ── -->
+    <div class="tab-pane" id="tab-expand">
+      <div class="expand-panel">
+        <div class="expand-header">
+          <span class="expand-label">AI IDEA EXPANDER</span>
+          <div class="provider-status">
+            <div class="provider-dot" id="expand-dot"></div>
+            <span id="expand-provider-name">No provider configured</span>
+            <button class="btn-sm" style="padding:3px 8px;font-size:10px" onclick="openSettings()">⚙ Configure</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">YOUR IDEA</label>
+          <textarea id="expand-idea" placeholder="Describe your shot or scene in plain English…&#10;&#10;E.g., 'A detective walks into a neon-lit rain-soaked alley at night, tense, searching for something, close up on her face'" style="min-height:100px"></textarea>
+        </div>
+
+        <div class="expand-framework-row">
+          <label class="field-label" style="margin:0">FRAMEWORK</label>
+          <select id="expand-framework" style="flex:1;font-size:12px;padding:6px 10px">
+            <option value="auto">Auto — let AI choose best structure</option>
+            <option value="five-segment">Five-Segment</option>
+            <option value="craft">CRAFT</option>
+            <option value="timeline">Timeline Storyboard</option>
+            <option value="mcsla">MCSLA only (Camera·Subject·Look·Action)</option>
+          </select>
+          <button class="expand-btn" id="expand-btn" onclick="runExpand()" style="padding:8px 16px;font-size:11px">
+            <span id="expand-btn-label">EXPAND ✦</span>
+          </button>
+        </div>
+
+        <div id="expand-error" class="error-msg" style="display:none"></div>
+
+        <div class="field">
+          <label class="field-label">EXPANDED PROMPT</label>
+          <div class="expand-result empty" id="expand-result">Expanded prompt will appear here…</div>
+        </div>
+
+        <div class="expand-result-actions">
+          <button class="btn-sm" onclick="copyExpanded()">⎘ COPY</button>
+          <button class="btn-sm btn-amber" onclick="applyExpandedToOutput()">→ USE AS PROMPT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Tab: SHOT BRIEF ── -->
+    <div class="tab-pane" id="tab-brief">
+      <div class="brief-panel">
+        <div class="brief-scroll">
+          <div class="field" style="margin-top:0;margin-bottom:14px">
+            <label class="field-label">SHOT TITLE</label>
+            <input type="text" id="brief-title" placeholder="E.g., Scene 03 — Alley Confrontation" oninput="updateBrief()">
+          </div>
+
+          <div class="brief-section-title">VISUAL DNA REFERENCES (drag-drop or click)</div>
+          <div class="ref-upload-grid" id="brief-ref-grid"></div>
+
+          <div class="brief-section-title">ASSEMBLED PROMPT WITH REFS</div>
+          <div class="brief-prompt-box" id="brief-prompt-display">Build your prompt using the fields on the left, then switch to this tab to see it assembled with your references.</div>
+
+          <div class="brief-section-title">TECHNICAL PARAMETERS</div>
+          <div class="tech-block" id="brief-tech-block">
+            <div><div class="tech-item-label">MODEL</div><div class="tech-item-val" id="tb-model">—</div></div>
+            <div><div class="tech-item-label">RESOLUTION</div><div class="tech-item-val" id="tb-res">—</div></div>
+            <div><div class="tech-item-label">RENDER TIER</div><div class="tech-item-val" id="tb-tier">—</div></div>
+            <div><div class="tech-item-label">FRAMEWORK</div><div class="tech-item-val" id="tb-framework">—</div></div>
+            <div><div class="tech-item-label">ASPECT RATIO</div><div class="tech-item-val" id="tb-aspect">—</div></div>
+            <div><div class="tech-item-label">MODE</div><div class="tech-item-val" id="tb-mode">—</div></div>
+          </div>
+
+          <div class="field" style="margin-bottom:14px">
+            <label class="field-label">DIRECTOR NOTES</label>
+            <textarea id="brief-notes" placeholder="Performance direction, continuity notes, references to prior shots…" style="min-height:80px"></textarea>
+          </div>
+        </div>
+
+        <div class="brief-footer">
+          <button class="btn-sm" onclick="copyBriefJson()">{ } EXPORT JSON</button>
+          <button class="btn-sm btn-amber" onclick="copyBriefPrompt()">⎘ COPY PROMPT WITH REFS</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+</div><!-- /main -->
+
+<!-- ══ PRESET MODAL ══ -->
+<div class="modal-overlay" id="preset-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modal-title">PRESETS</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="preset-list" id="preset-list">
+        <div style="color:var(--text-mute);font-size:12px;text-align:center;padding:20px">No saved presets yet.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <input type="text" id="preset-name-input" placeholder="Preset name…">
+      <button class="btn-sm btn-amber" onclick="saveCurrentPreset()">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS MODAL ══ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <span>⚙ AI PROVIDER SETTINGS</span>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-note">Configure your AI provider for the Idea Expander. Your API key is stored only in this browser (localStorage) and never sent to any third party.</div>
+
+      <div class="settings-row">
+        <label>PROVIDER</label>
+        <select id="settings-provider" onchange="onProviderPreset()">
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="openai">OpenAI</option>
+          <option value="openrouter">OpenRouter</option>
+          <option value="ollama">Ollama — Local</option>
+          <option value="lmstudio">LM Studio — Local</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+
+      <div class="settings-row">
+        <label>BASE URL</label>
+        <input type="text" id="settings-url" placeholder="https://api.anthropic.com/v1">
+      </div>
+
+      <div class="settings-row">
+        <label>MODEL</label>
+        <input type="text" id="settings-model" placeholder="e.g. claude-sonnet-4-6">
+      </div>
+
+      <div class="settings-row">
+        <label>API KEY</label>
+        <input type="password" id="settings-key" placeholder="Paste key — optional for local providers">
+      </div>
+
+      <div class="settings-divider"></div>
+      <div class="settings-note" id="settings-provider-note"></div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end">
+      <button class="btn-sm" onclick="closeSettings()">CANCEL</button>
+      <button class="btn-sm btn-amber" onclick="saveSettings()">SAVE SETTINGS</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<!-- Hidden file input for brief refs -->
+<input type="file" id="brief-file-input" accept="image/*" style="display:none" onchange="onBriefFileSelect(event)">
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+
+const MODELS = {
+  image: {
+    'Portrait / Character': ['Soul 2.0','Soul Cinema Preview','Higgsfield Soul'],
+    '4K / Native':          ['Kling Image 3.0','Kling Image 3.0 Omni','Nano Banana Pro'],
+    'Fast / Versatile':     ['Nano Banana 2','Seedream 5.0 Lite'],
+    'Artistic / Reference': ['Seedream 4.5','GPT Image 1.5','Flux 2','Flux Kontext'],
+    'Budget':               ['Z-Image'],
+  },
+  video: {
+    'Cinematic (Kling 3.0)': ['Kling 3.0','Kling 3.0 Omni','Kling 3.0 Omni Edit','Kling 3.0 Motion Control'],
+    'Legacy Kling':          ['Kling O1 Video','Kling O1 Video Edit','Kling 2.6','Kling 2.5 Turbo'],
+    'Artistic (Wan)':        ['Wan 2.7','Wan 2.6','Wan 2.5','Wan 2.5 Fast'],
+    'Epic Scale':            ['Sora 2'],
+    'Multimodal (Seedance)': ['Seedance 2.0','Seedance 1.5 Pro','Seedance Pro'],
+    'Environment (Veo)':     ['Veo 3.1','Veo 3.1 Fast','Veo 3.1 Lite','Veo 3','Veo 3 Fast'],
+    'Motion / VFX':          ['Minimax Hailuo 2.3','Minimax Hailuo 2.3 Fast','Minimax Hailuo 02','Minimax Hailuo 02 Fast'],
+    'Higgsfield DoP':        ['Higgsfield DoP Lite','Higgsfield DoP Standard','Higgsfield DoP Turbo'],
+    'Editing':               ['Grok Imagine Video'],
+  }
+};
+
+const EMOTION_CHANNELS = ['Breath','Eye behavior','Jaw tension','Loss of focus','Scanning pattern','Delayed recovery','Control attempt','Emotional residue'];
+const PHOTODUMP_PRESETS = ['General','Old Anime','Simps','Ink Sketch','Gumstyle','Clay','Bender','Big Bob','Pop Cartoon','Regular','Jack Horse','Manga','Gravity Force','Adventure Tales','3D Cartoon','Family Boss','West Park','Flat Cartoon','R&M','Child Art','Abstract Cartoon','Crayon','Bikini Bottom','Balloon','Old Cartoon','Bricks','Fairy Tale','Muppet','Voxel Art'];
+const AUDIO_CAPABLE = ['Veo 3.1','Veo 3.1 Fast','Veo 3','Veo 3 Fast','Seedance 2.0'];
+const SOUL_MODELS   = ['Soul 2.0','Soul Cinema Preview','Higgsfield Soul'];
+const SEEDANCE_MODELS = ['Seedance 2.0','Seedance 1.5 Pro','Seedance Pro'];
+
+const PROVIDER_PRESETS = {
+  anthropic:  { url: 'https://api.anthropic.com/v1',          model: 'claude-sonnet-4-6',          note: 'Anthropic Claude. Requires an API key from console.anthropic.com.' },
+  openai:     { url: 'https://api.openai.com/v1',             model: 'gpt-4o',                     note: 'OpenAI. Requires an API key from platform.openai.com.' },
+  openrouter: { url: 'https://openrouter.ai/api/v1',          model: 'openai/gpt-4o',              note: 'OpenRouter — access 200+ models with one key. openrouter.ai' },
+  ollama:     { url: 'http://localhost:11434/v1',             model: 'llama3.1:8b',                note: 'Local Ollama server. No API key needed. Run: ollama serve' },
+  lmstudio:   { url: 'http://localhost:1234/v1',              model: 'local-model',                note: 'Local LM Studio server. No API key needed. Enable server in LM Studio.' },
+  custom:     { url: '',                                       model: '',                           note: 'Enter your own base URL and model name for any OpenAI-compatible endpoint.' },
+};
+
+const PRODUCER_DNA = {
+  bruckheimer: { lighting: 'Rim lighting / backlit',        grade: 'Teal-orange blockbuster' },
+  bay:         { lighting: 'Golden hour / Magic hour',      grade: 'Warm nostalgia' },
+  cameron:     { lighting: 'Volumetric',                    grade: 'Sci-fi cold' },
+  nolan:       { lighting: 'Chiaroscuro',                   grade: 'Chiaroscuro Realism' },
+  spielberg:   { lighting: 'Rim lighting / backlit',        grade: 'Amblin Warm Diffusion' },
+  scorsese:    { lighting: 'Practical lighting',            grade: 'Noir' },
+  fincher:     { lighting: 'Low-key',                       grade: 'Desaturated precision' },
+  villeneuve:  { lighting: 'Overcast / Softbox',            grade: 'Cold thriller' },
+  wong:        { lighting: 'Neon',                          grade: 'Neon Desaturated' },
+  kurosawa:    { lighting: 'Hard light',                    grade: 'Documentary' },
+  lynch:       { lighting: 'Deep shadow fill',              grade: 'Horror' },
+  tarantino:   { lighting: 'Warm tungsten',                 grade: 'Warm analog grain' },
+  phillips:    { lighting: 'Neon',                          grade: 'Neon Desaturated' },
+  kennedy:     { lighting: 'Side-lit',                      grade: 'Used Future' },
+};
+
+const FRAMEWORK_HINTS = {
+  'five-segment': 'Structure: [Opening setup] | [Subject introduction] | [Core action] | [Environmental context] | [Emotional/aesthetic close]',
+  'craft':        'CRAFT: [C]ontext — [R]eference points — [A]ction — [F]raming — [T]one',
+  'timeline':     'Timeline: Use the beat editor below. Each line becomes a timestamped narrative beat.',
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+let state = {
+  mode: 'image',
+  resolution: '1K',
+  photodump: null,
+  emotionChannels: new Set(),
+  editMode: false,
+  activeTab: 'prompt',
+  briefRefs: Array(9).fill(null),
+  briefFileSlot: 0,
+};
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+
+function init() {
+  buildModelSelect();
+  buildEmotionChannelTags();
+  buildPhotodumpGrid();
+  buildRef2VGrids();
+  buildBriefRefGrid();
+  setMode('image');
+  loadSettingsToUI();
+  updateProviderIndicator();
+}
+
+function buildModelSelect() {
+  const sel = document.getElementById('sel-model');
+  const groups = MODELS[state.mode];
+  sel.innerHTML = '<option value="">— Select model —</option>';
+  for (const [group, models] of Object.entries(groups)) {
+    const og = document.createElement('optgroup');
+    og.label = group;
+    models.forEach(m => {
+      const o = document.createElement('option');
+      o.value = o.textContent = m;
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  }
+}
+
+function buildEmotionChannelTags() {
+  const container = document.getElementById('emotion-channels');
+  container.innerHTML = '';
+  EMOTION_CHANNELS.forEach(ch => {
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.textContent = ch;
+    tag.onclick = () => {
+      state.emotionChannels.has(ch) ? state.emotionChannels.delete(ch) : state.emotionChannels.add(ch);
+      tag.classList.toggle('selected', state.emotionChannels.has(ch));
+      buildPrompt();
+    };
+    container.appendChild(tag);
+  });
+}
+
+function buildPhotodumpGrid() {
+  const grid = document.getElementById('photodump-grid');
+  grid.innerHTML = '';
+  PHOTODUMP_PRESETS.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'photodump-item';
+    item.textContent = p;
+    item.onclick = () => {
+      if (state.photodump === p) { state.photodump = null; item.classList.remove('selected'); }
+      else { document.querySelectorAll('.photodump-item').forEach(el => el.classList.remove('selected')); state.photodump = p; item.classList.add('selected'); }
+      buildPrompt();
+    };
+    grid.appendChild(item);
+  });
+}
+
+function buildRef2VGrids() {
+  const imgGrid = document.getElementById('ref-image-grid');
+  imgGrid.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'ref-slot';
+    slot.innerHTML = `<div class="ref-slot-tag">@Image${i}</div><input type="text" placeholder="Description…" id="ref-img-${i}" oninput="buildPrompt()">`;
+    imgGrid.appendChild(slot);
+  }
+  const vidGrid = document.getElementById('ref-video-grid');
+  vidGrid.innerHTML = '';
+  for (let i = 1; i <= 3; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'ref-slot';
+    slot.innerHTML = `<div class="ref-slot-tag video">@Video${i}</div><input type="text" placeholder="Description…" id="ref-vid-${i}" oninput="buildPrompt()">`;
+    vidGrid.appendChild(slot);
+  }
+  const audGrid = document.getElementById('ref-audio-grid');
+  audGrid.innerHTML = '';
+  for (let i = 1; i <= 3; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'ref-slot';
+    slot.innerHTML = `<div class="ref-slot-tag audio">@Audio${i}</div><input type="text" placeholder="Description…" id="ref-aud-${i}" oninput="buildPrompt()">`;
+    audGrid.appendChild(slot);
+  }
+}
+
+function buildBriefRefGrid() {
+  const grid = document.getElementById('brief-ref-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'ref-upload-slot';
+    slot.dataset.idx = i;
+    slot.innerHTML = `
+      <div class="ref-slot-label img-tag">@Image${i+1}${i===0?' · DNA':''}</div>
+      <button class="ref-slot-clear" onclick="clearBriefRef(${i},event)">✕</button>
+      <div class="ref-upload-icon">+</div>
+      <div class="ref-upload-text">${i===0?'Character Sheet':'Ref image'}</div>`;
+    slot.onclick = (e) => { if (e.target.tagName !== 'BUTTON') { state.briefFileSlot = i; document.getElementById('brief-file-input').click(); } };
+    grid.appendChild(slot);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+
+function setTab(tab) {
+  state.activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab) || (tab === 'expand' && btn.textContent === 'AI EXPAND') || (tab === 'brief' && btn.textContent === 'SHOT BRIEF'));
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'brief') updateBrief();
+  if (tab === 'expand') updateExpandProviderStatus();
+}
+
+// ═══════════════════════════════════════════════════════
+// MODE TOGGLE
+// ═══════════════════════════════════════════════════════
+
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll('.mode-btn').forEach((btn, i) => btn.classList.toggle('active', (i===0)===(mode==='image')));
+  document.querySelectorAll('.video-only').forEach(el => el.style.display = mode === 'video' ? '' : 'none');
+  document.getElementById('photodump-section').style.display = mode === 'image' ? '' : 'none';
+  document.getElementById('queue-label').textContent = mode === 'image' ? 'QUEUE IMAGE' : 'QUEUE VIDEO';
+  document.getElementById('sel-model').value = '';
+  buildModelSelect();
+  onModelChange();
+  buildPrompt();
+}
+
+// ═══════════════════════════════════════════════════════
+// MODEL CHANGE
+// ═══════════════════════════════════════════════════════
+
+function onModelChange() {
+  const model = document.getElementById('sel-model').value;
+  const isSoul = SOUL_MODELS.includes(model);
+  const isVeo  = model.startsWith('Veo');
+  const isSeedance = SEEDANCE_MODELS.includes(model);
+  const isKlingMC  = model === 'Kling 3.0 Motion Control';
+
+  document.getElementById('soul-id-field').style.display          = isSoul     ? 'block' : 'none';
+  document.getElementById('motion-control-field').style.display   = isKlingMC  ? 'block' : 'none';
+  document.getElementById('veo-grounding-field').style.display    = isVeo      ? 'block' : 'none';
+  document.getElementById('grounding-bar').style.display          = isVeo      ? 'flex'  : 'none';
+  document.getElementById('seedance-archetype-field').style.display = isSeedance ? 'block' : 'none';
+  document.getElementById('sec-ref2v').style.display              = (isSeedance && state.mode === 'video') ? '' : 'none';
+  document.getElementById('lens-switch-field').style.display      = (isSeedance && state.mode === 'video') ? '' : 'none';
+  document.getElementById('active-model-label').textContent       = model || 'No model selected';
+
+  buildPrompt();
+}
+
+// ═══════════════════════════════════════════════════════
+// FRAMEWORK
+// ═══════════════════════════════════════════════════════
+
+function onFrameworkChange() {
+  const fw = document.getElementById('sel-framework').value;
+  const hint = document.getElementById('framework-hint');
+  const beatsField = document.getElementById('timeline-beats-field');
+  if (fw && FRAMEWORK_HINTS[fw]) {
+    hint.textContent = FRAMEWORK_HINTS[fw];
+    hint.style.display = 'block';
+  } else {
+    hint.style.display = 'none';
+  }
+  beatsField.style.display = fw === 'timeline' ? 'block' : 'none';
+  buildPrompt();
+}
+
+// ═══════════════════════════════════════════════════════
+// PRODUCER DNA
+// ═══════════════════════════════════════════════════════
+
+function applyProducerDNA() {
+  const key = document.getElementById('sel-producer-dna').value;
+  if (!key || !PRODUCER_DNA[key]) { buildPrompt(); return; }
+  const dna = PRODUCER_DNA[key];
+  document.getElementById('sel-lighting').value = dna.lighting;
+  document.getElementById('sel-grade').value = dna.grade;
+  buildPrompt();
+  showToast('Producer DNA applied.');
+}
+
+// ═══════════════════════════════════════════════════════
+// LENS SWITCH
+// ═══════════════════════════════════════════════════════
+
+function onLensSwitchChange() {
+  const on = document.getElementById('lens-switch-toggle').checked;
+  document.getElementById('lens-switch-target').style.display = on ? 'block' : 'none';
+  buildPrompt();
+}
+
+// ═══════════════════════════════════════════════════════
+// PROMPT BUILDER — MCSLA
+// ═══════════════════════════════════════════════════════
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function buildPrompt() {
+  const parts = [];
+  const fw = val('sel-framework');
+
+  if (fw === 'timeline') {
+    const beats = val('timeline-beats');
+    if (beats) {
+      const prompt = beats;
+      applyPromptOutput(prompt);
+      return;
+    }
+  }
+
+  const model      = val('sel-model');
+  const shotSize   = val('sel-shot-size');
+  const angle      = val('sel-angle');
+  const camMove    = val('sel-camera-move');
+  const lens       = val('sel-lens');
+  const subject    = val('subject');
+  const action     = val('action');
+  const body       = val('sel-body');
+  const movement   = val('sel-movement');
+  const env        = val('environment');
+  const tod        = val('sel-timeofday');
+  const weather    = val('sel-weather');
+  const lighting   = val('sel-lighting');
+  const grade      = val('sel-grade');
+  const style      = val('sel-style');
+  const film       = val('sel-film');
+  const aspect     = val('sel-aspect');
+  const emotion    = val('sel-emotion');
+  const microexp   = val('sel-microexp');
+  const archetype  = val('sel-seedance-archetype');
+  const audioType  = val('sel-audio-type');
+  const audioDesc  = val('audio-desc');
+  const narrative  = val('sel-narrative');
+  const genre      = val('sel-genre');
+  const spatial    = val('sel-spatial');
+  const notes      = val('notes');
+  const motionCtrl = val('sel-motion-control');
+  const soulId     = val('soul-id');
+  const renderTier = val('sel-render-tier');
+  const frameCtrl  = val('sel-frame-control');
+
+  // Ref2V tags
+  const refTags = [];
+  if (SEEDANCE_MODELS.includes(model) && state.mode === 'video') {
+    for (let i = 1; i <= 9; i++) { const v = val('ref-img-' + i); if (v) refTags.push(`@Image${i}: ${v}`); }
+    for (let i = 1; i <= 3; i++) { const v = val('ref-vid-' + i); if (v) refTags.push(`@Video${i}: ${v}`); }
+    for (let i = 1; i <= 3; i++) { const v = val('ref-aud-' + i); if (v) refTags.push(`@Audio${i}: ${v}`); }
+  }
+
+  // Camera (C)
+  const cameraTokens = [camMove, shotSize, angle].filter(Boolean);
+  if (cameraTokens.length) parts.push(cameraTokens.join(', ') + '.');
+
+  // Subject (S)
+  if (subject) parts.push(subject + (subject.endsWith('.') ? '' : '.'));
+
+  // Action (A)
+  const actionTokens = [action, body, movement].filter(Boolean);
+  if (actionTokens.length) parts.push(actionTokens.join('. ') + '.');
+
+  // Environment
+  const envTokens = [env, tod, weather].filter(Boolean);
+  if (envTokens.length) parts.push(envTokens.join(', ') + '.');
+
+  // Look (L)
+  const lookTokens = [lighting, grade].filter(Boolean);
+  if (lookTokens.length) parts.push(lookTokens.join(', ') + '.');
+
+  if (style)           parts.push(style + ' aesthetic.');
+  if (film)            parts.push('Shot on ' + film + '.');
+  if (aspect)          parts.push('Aspect ratio: ' + aspect + '.');
+  if (lens)            parts.push(lens + '.');
+  if (state.photodump) parts.push('Photodump style: ' + state.photodump + '.');
+  if (soulId)          parts.push('Soul ID: ' + soulId + '.');
+
+  if (state.mode === 'video') {
+    if (emotion)  parts.push('Emotion: ' + emotion + '.');
+    if (microexp) parts.push('Expression: ' + microexp + '.');
+    if (state.emotionChannels.size) parts.push('Performance channels: ' + [...state.emotionChannels].join(', ') + '.');
+    if (archetype) parts.push('Scene archetype: ' + archetype + '.');
+  }
+
+  const audioTokens = [audioType, audioDesc].filter(Boolean);
+  if (audioTokens.length) parts.push('Audio: ' + audioTokens.join(' — ') + '.');
+
+  if (motionCtrl) parts.push('Motion control: ' + motionCtrl + '.');
+
+  const grounding = document.getElementById('veo-grounding');
+  if (grounding && grounding.checked) parts.push('Use Google Search grounding.');
+
+  if (spatial)   parts.push('Subject in ' + spatial + '.');
+  if (narrative) parts.push('[' + narrative + ']');
+  if (genre)     parts.push('Genre: ' + genre + '.');
+
+  // Lens switch
+  const lsOn = document.getElementById('lens-switch-toggle') && document.getElementById('lens-switch-toggle').checked;
+  if (lsOn) {
+    const lsSize = val('sel-lens-switch-size');
+    parts.push('Lens switch' + (lsSize ? ' → ' + lsSize : '') + '.');
+  }
+
+  // Render tier
+  if (renderTier === 'fast') parts.push('[FAST]');
+  if (renderTier === 'pro')  parts.push('[PRO]');
+
+  // Frame control
+  if (frameCtrl) parts.push('[' + frameCtrl.toUpperCase() + ']');
+
+  if (notes) parts.push(notes);
+
+  // Ref2V tags appended
+  if (refTags.length) parts.push('\n' + refTags.join('\n'));
+
+  let prompt = parts.join(' ');
+
+  // Wrap with framework label if set
+  if (fw === 'craft') prompt = '[CRAFT]\n' + prompt;
+  if (fw === 'five-segment') prompt = '[FIVE-SEGMENT]\n' + prompt;
+
+  applyPromptOutput(prompt);
+}
+
+function applyPromptOutput(prompt) {
+  if (!state.editMode) {
+    document.getElementById('prompt-output').value = prompt;
+  }
+  document.getElementById('char-count').textContent = prompt.length;
+}
+
+// ═══════════════════════════════════════════════════════
+// UI ACTIONS
+// ═══════════════════════════════════════════════════════
+
+function toggleSection(id) {
+  const sec = document.getElementById(id);
+  sec.classList.toggle('open');
+  sec.querySelector('.section-chevron').textContent = sec.classList.contains('open') ? '▲' : '▼';
+}
+
+function editToggle() {
+  state.editMode = !state.editMode;
+  const out = document.getElementById('prompt-output');
+  out.readOnly = !state.editMode;
+  out.style.borderColor = state.editMode ? 'var(--amber)' : '';
+  if (!state.editMode) buildPrompt();
+  showToast(state.editMode ? 'Prompt is now editable.' : 'Edit mode off.');
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-output').value;
+  if (!text) return showToast('Nothing to copy.');
+  navigator.clipboard.writeText(text).then(() => showToast('Prompt copied!', 'success'));
+}
+
+function copySceneJson() {
+  navigator.clipboard.writeText(JSON.stringify(buildSceneJson(), null, 2))
+    .then(() => showToast('Scene JSON copied!', 'success'));
+}
+
+function sendToExpand() {
+  document.getElementById('expand-idea').value = document.getElementById('prompt-output').value;
+  setTab('expand');
+  showToast('Prompt sent to AI Expand.');
+}
+
+function buildSceneJson() {
+  return {
+    mode: state.mode, model: val('sel-model'),
+    prompt: document.getElementById('prompt-output').value,
+    resolution: state.resolution, aspect_ratio: val('sel-aspect') || null,
+    framework: val('sel-framework') || null,
+    render_tier: val('sel-render-tier') || null,
+    soul_id: val('soul-id') || null,
+    narrative: val('sel-narrative') || null, genre: val('sel-genre') || null,
+    audio: { type: val('sel-audio-type') || null, description: val('audio-desc') || null },
+    camera: { move: val('sel-camera-move') || null, shot_size: val('sel-shot-size') || null, angle: val('sel-angle') || null, lens: val('sel-lens') || null },
+    look: { style: val('sel-style') || null, grade: val('sel-grade') || null, lighting: val('sel-lighting') || null, film: val('sel-film') || null, photodump: state.photodump || null },
+  };
+}
+
+function setRes(res) {
+  state.resolution = res;
+  ['1K','2K','4K'].forEach(r => document.getElementById('res-' + r.toLowerCase()).classList.toggle('active', r === res));
+}
+
+function syncGrounding(el) {
+  document.getElementById('veo-grounding').checked = el.checked;
+  buildPrompt();
+}
+
+function queueGenerate() {
+  const prompt = document.getElementById('prompt-output').value;
+  if (!prompt) return showToast('Build your prompt first.');
+  copyPrompt();
+  showToast('Prompt copied — paste into Higgsfield to generate.', 'success');
+}
+
+function clearAll() {
+  if (!confirm('Clear all fields?')) return;
+  document.querySelectorAll('textarea, input[type="text"]').forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  state.photodump = null; state.emotionChannels = new Set();
+  document.querySelectorAll('.photodump-item, .tag').forEach(el => el.classList.remove('selected'));
+  state.editMode = false;
+  document.getElementById('prompt-output').readOnly = true;
+  document.getElementById('prompt-output').style.borderColor = '';
+  document.getElementById('framework-hint').style.display = 'none';
+  document.getElementById('timeline-beats-field').style.display = 'none';
+  onModelChange(); buildPrompt();
+  showToast('Cleared.');
+}
+
+// ═══════════════════════════════════════════════════════
+// PRESETS
+// ═══════════════════════════════════════════════════════
+
+let modalMode = 'save';
+
+function openModal(mode) {
+  modalMode = mode;
+  document.getElementById('modal-title').textContent = mode === 'save' ? 'SAVE PRESET' : 'LOAD PRESET';
+  document.querySelector('#preset-modal .modal-footer').style.display = mode === 'save' ? 'flex' : 'none';
+  renderPresetList();
+  document.getElementById('preset-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('preset-modal').classList.remove('open'); }
+function getPresets() { try { return JSON.parse(localStorage.getItem('hf_presets') || '[]'); } catch { return []; } }
+function savePresets(p) { localStorage.setItem('hf_presets', JSON.stringify(p)); }
+
+function saveCurrentPreset() {
+  const name = document.getElementById('preset-name-input').value.trim();
+  if (!name) return showToast('Enter a preset name.');
+  const presets = getPresets();
+  presets.unshift({ name, date: new Date().toLocaleDateString(), mode: state.mode, json: buildSceneJson(), prompt: document.getElementById('prompt-output').value, fields: captureFields() });
+  savePresets(presets);
+  document.getElementById('preset-name-input').value = '';
+  closeModal(); showToast('Preset saved!', 'success');
+}
+
+function captureFields() {
+  const fields = {};
+  document.querySelectorAll('select[id], textarea[id], input[type="text"][id]').forEach(el => { fields[el.id] = el.value; });
+  fields._photodump = state.photodump;
+  fields._emotionChannels = [...state.emotionChannels];
+  fields._mode = state.mode;
+  return fields;
+}
+
+function loadPreset(preset) {
+  setMode(preset.fields._mode || 'image');
+  Object.keys(preset.fields).forEach(id => {
+    if (id.startsWith('_')) return;
+    const el = document.getElementById(id);
+    if (el) el.value = preset.fields[id];
+  });
+  state.photodump = preset.fields._photodump || null;
+  document.querySelectorAll('.photodump-item').forEach(el => el.classList.toggle('selected', el.textContent === state.photodump));
+  state.emotionChannels = new Set(preset.fields._emotionChannels || []);
+  document.querySelectorAll('#emotion-channels .tag').forEach(tag => tag.classList.toggle('selected', state.emotionChannels.has(tag.textContent)));
+  onModelChange(); buildPrompt(); closeModal(); showToast('Preset loaded!', 'success');
+}
+
+function deletePreset(index) {
+  const presets = getPresets(); presets.splice(index, 1); savePresets(presets); renderPresetList();
+}
+
+function renderPresetList() {
+  const list = document.getElementById('preset-list');
+  const presets = getPresets();
+  if (!presets.length) { list.innerHTML = '<div style="color:var(--text-mute);font-size:12px;text-align:center;padding:20px">No saved presets yet.</div>'; return; }
+  list.innerHTML = '';
+  presets.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'preset-item';
+    item.innerHTML = `<div><div class="preset-name">${p.name}</div><div class="preset-meta">${p.mode.toUpperCase()} · ${p.date} · ${p.json.model || 'No model'}</div></div><div class="preset-item-actions"><button class="btn-sm" onclick="loadPreset(getPresets()[${i}])">LOAD</button><button class="btn-sm" onclick="deletePreset(${i});event.stopPropagation()">✕</button></div>`;
+    list.appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════
+
+function openSettings() {
+  loadSettingsToUI();
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+
+function onProviderPreset() {
+  const key = document.getElementById('settings-provider').value;
+  const preset = PROVIDER_PRESETS[key];
+  if (preset) {
+    if (key !== 'custom') {
+      document.getElementById('settings-url').value   = preset.url;
+      document.getElementById('settings-model').value = preset.model;
+    }
+    document.getElementById('settings-provider-note').textContent = preset.note;
+  }
+}
+
+function saveSettings() {
+  const s = {
+    provider: document.getElementById('settings-provider').value,
+    url:      document.getElementById('settings-url').value.trim(),
+    model:    document.getElementById('settings-model').value.trim(),
+    key:      document.getElementById('settings-key').value.trim(),
+  };
+  localStorage.setItem('hf_settings', JSON.stringify(s));
+  closeSettings();
+  updateProviderIndicator();
+  updateExpandProviderStatus();
+  showToast('Settings saved!', 'success');
+}
+
+function loadSettingsToUI() {
+  const s = getSettings();
+  document.getElementById('settings-provider').value = s.provider || 'anthropic';
+  document.getElementById('settings-url').value      = s.url || PROVIDER_PRESETS.anthropic.url;
+  document.getElementById('settings-model').value    = s.model || PROVIDER_PRESETS.anthropic.model;
+  document.getElementById('settings-key').value      = s.key || '';
+  onProviderPreset();
+}
+
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem('hf_settings') || '{}'); } catch { return {}; }
+}
+
+function updateProviderIndicator() {
+  const s = getSettings();
+  const names = { anthropic:'Anthropic', openai:'OpenAI', openrouter:'OpenRouter', ollama:'Ollama (local)', lmstudio:'LM Studio (local)', custom:'Custom' };
+  const label = names[s.provider] || 'No provider';
+  document.getElementById('header-provider').textContent = label;
+}
+
+function updateExpandProviderStatus() {
+  const s = getSettings();
+  const names = { anthropic:'Anthropic', openai:'OpenAI', openrouter:'OpenRouter', ollama:'Ollama', lmstudio:'LM Studio', custom:'Custom' };
+  const isLocal = s.provider === 'ollama' || s.provider === 'lmstudio';
+  const ready = !!s.url && (isLocal || !!s.key);
+  const dot = document.getElementById('expand-dot');
+  const name = document.getElementById('expand-provider-name');
+  if (dot) { dot.classList.toggle('ready', ready); }
+  if (name) { name.textContent = ready ? (names[s.provider] || 'Unknown') + (s.model ? ' · ' + s.model : '') : 'No provider configured'; }
+}
+
+// ═══════════════════════════════════════════════════════
+// AI EXPAND
+// ═══════════════════════════════════════════════════════
+
+const SYSTEM_PROMPT = `You are an expert AI film and video prompt engineer specializing in Higgsfield, Seedance, Kling, Veo, and Sora models.
+
+The user provides a rough idea for a shot or scene. Expand it into a detailed, camera-ready generation prompt using the MCSLA formula:
+[Camera movement + shot size + angle]. [Subject description]. [Action/what happens]. [Environment + time + atmosphere]. [Lighting + color grade + style].
+
+Framework rules (apply the one specified):
+- five-segment: label five beats: Opening setup | Subject intro | Core action | Environmental context | Emotional/aesthetic close
+- craft: label five parts: Context | Reference points | Action | Framing | Tone
+- timeline: output timestamped beats: [0:00] ... [0:03] ... [0:06] ... [0:09] ... [0:12] ...
+- mcsla: strict MCSLA one-paragraph form, no labels
+- auto: choose the best format for the idea
+
+Return ONLY the finished prompt text. No explanation. No preamble. No markdown headers.`;
+
+async function runExpand() {
+  const idea = document.getElementById('expand-idea').value.trim();
+  if (!idea) return showToast('Enter your idea first.');
+
+  const s = getSettings();
+  const isLocal = s.provider === 'ollama' || s.provider === 'lmstudio';
+  if (!s.url) return showError('No provider URL. Click ⚙ to configure.');
+  if (!isLocal && !s.key) return showError('No API key. Click ⚙ to configure.');
+
+  const fw = document.getElementById('expand-framework').value;
+  const userMsg = `Framework: ${fw}\n\nIdea: ${idea}`;
+
+  setBtnLoading(true);
+  document.getElementById('expand-error').style.display = 'none';
+
+  try {
+    const text = await callAI(s, SYSTEM_PROMPT, userMsg);
+    const result = document.getElementById('expand-result');
+    result.textContent = text;
+    result.classList.remove('empty');
+  } catch (err) {
+    showError(err.message || String(err));
+  } finally {
+    setBtnLoading(false);
+  }
+}
+
+function setBtnLoading(loading) {
+  const btn = document.getElementById('expand-btn');
+  const label = document.getElementById('expand-btn-label');
+  btn.disabled = loading;
+  label.innerHTML = loading ? '<span class="spinner"></span> EXPANDING…' : 'EXPAND ✦';
+}
+
+function showError(msg) {
+  const el = document.getElementById('expand-error');
+  el.textContent = '⊘ ' + msg;
+  el.style.display = 'block';
+}
+
+async function callAI(s, systemPrompt, userMsg) {
+  if (s.provider === 'anthropic') {
+    const resp = await fetch(s.url + '/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': s.key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: s.model || 'claude-sonnet-4-6',
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMsg }],
+      }),
+    });
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error?.message || 'Anthropic API error ' + resp.status); }
+    const data = await resp.json();
+    return data.content[0].text;
+  } else {
+    // OpenAI-compatible (OpenRouter, OpenAI, Ollama, LM Studio, Custom)
+    const resp = await fetch(s.url + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(s.key ? { 'Authorization': 'Bearer ' + s.key } : {}),
+      },
+      body: JSON.stringify({
+        model: s.model || 'gpt-4o',
+        max_tokens: 1024,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user',   content: userMsg },
+        ],
+      }),
+    });
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error?.message || 'API error ' + resp.status); }
+    const data = await resp.json();
+    return data.choices[0].message.content;
+  }
+}
+
+function copyExpanded() {
+  const text = document.getElementById('expand-result').textContent;
+  if (!text || text.includes('appear here')) return showToast('Nothing to copy.');
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!', 'success'));
+}
+
+function applyExpandedToOutput() {
+  const text = document.getElementById('expand-result').textContent;
+  if (!text || text.includes('appear here')) return showToast('Expand an idea first.');
+  state.editMode = false;
+  document.getElementById('prompt-output').readOnly = true;
+  document.getElementById('prompt-output').style.borderColor = '';
+  document.getElementById('prompt-output').value = text;
+  document.getElementById('char-count').textContent = text.length;
+  setTab('prompt');
+  showToast('Prompt applied!', 'success');
+}
+
+// ═══════════════════════════════════════════════════════
+// SHOT BRIEF
+// ═══════════════════════════════════════════════════════
+
+function onBriefFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    state.briefRefs[state.briefFileSlot] = ev.target.result;
+    renderBriefRefSlot(state.briefFileSlot);
+    updateBrief();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function renderBriefRefSlot(i) {
+  const grid = document.getElementById('brief-ref-grid');
+  const slot = grid.children[i];
+  const img = state.briefRefs[i];
+  slot.classList.toggle('has-img', !!img);
+  const existingImg = slot.querySelector('img');
+  if (existingImg) existingImg.remove();
+  if (img) {
+    const el = document.createElement('img');
+    el.src = img;
+    slot.insertBefore(el, slot.firstChild);
+  }
+}
+
+function clearBriefRef(i, e) {
+  e.stopPropagation();
+  state.briefRefs[i] = null;
+  renderBriefRefSlot(i);
+  updateBrief();
+}
+
+function updateBrief() {
+  const basePrompt = document.getElementById('prompt-output').value;
+  const refLines = state.briefRefs
+    .map((r, i) => r ? `@Image${i+1}` : null)
+    .filter(Boolean);
+  const assembled = basePrompt + (refLines.length ? '\n' + refLines.join(' ') : '');
+  document.getElementById('brief-prompt-display').textContent = assembled || 'Build your prompt using the fields on the left.';
+
+  document.getElementById('tb-model').textContent    = val('sel-model') || '—';
+  document.getElementById('tb-res').textContent      = state.resolution;
+  document.getElementById('tb-tier').textContent     = val('sel-render-tier') ? (val('sel-render-tier') === 'fast' ? 'Fast (480p)' : 'Pro (1080p)') : '—';
+  document.getElementById('tb-framework').textContent = val('sel-framework') || 'Free-form';
+  document.getElementById('tb-aspect').textContent   = val('sel-aspect') || '—';
+  document.getElementById('tb-mode').textContent     = state.mode.toUpperCase();
+}
+
+function copyBriefPrompt() {
+  const text = document.getElementById('brief-prompt-display').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Brief prompt copied!', 'success'));
+}
+
+function copyBriefJson() {
+  const obj = {
+    title: val('brief-title'),
+    prompt: document.getElementById('brief-prompt-display').textContent,
+    director_notes: val('brief-notes'),
+    refs: state.briefRefs.map((r, i) => r ? { tag: '@Image' + (i+1), has_image: true } : null).filter(Boolean),
+    tech: {
+      model: val('sel-model'), resolution: state.resolution,
+      render_tier: val('sel-render-tier') || null,
+      framework: val('sel-framework') || 'free-form',
+      aspect_ratio: val('sel-aspect') || null,
+      mode: state.mode,
+    },
+    scene_json: buildSceneJson(),
+  };
+  navigator.clipboard.writeText(JSON.stringify(obj, null, 2))
+    .then(() => showToast('Brief JSON copied!', 'success'));
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ═══════════════════════════════════════════════════════
+// CLOSE ON OVERLAY CLICK
+// ═══════════════════════════════════════════════════════
+
+['preset-modal','settings-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => { if (e.target === e.currentTarget) { if (id === 'settings-modal') closeSettings(); else closeModal(); } });
+});
+
+// ═══════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════
+
+init();
+</script>
+</body>
+</html>
