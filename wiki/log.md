@@ -4,6 +4,24 @@
 
 ---
 
+## [2026-05-25] WORKFLOW — Skills auto-sync hook + review reminder (2026-06-01)
+
+**Session**: Claude Code remote (claude-sonnet-4-6)
+
+**Changes made:**
+- `~/.claude/sync-skills.sh` created — copies all `skills/*/SKILL.md` from `PCGamesplay1/Claude-skills` repo to `~/.claude/skills/` on every session start
+- `SessionStart` hook added to `~/.claude/settings.json` — runs sync-skills.sh automatically each session
+- All 19 repo skills now registered as `/slash-commands` (vault, higgsfield, claude-api, skill-creator, + 15 others)
+- `/vault` slash command now works correctly
+
+**⚠ OPEN ITEM — REVIEW BY 2026-06-01:**
+- Audit the full skills setup: confirm `/vault`, `/higgsfield` and key others work as expected
+- Check: should any skills be project-scoped (`.claude/settings.json`) rather than global?
+- Check: Mac local sessions use a different `~/.claude/` path — skills need separate sync there (run sync-skills.sh on Mac too, or add to Mac startup hook)
+- Consider: skills in `skills/` with no SKILL.md (subdirectory-only structures like higgsfield) — do they need a top-level SKILL.md dispatcher?
+
+---
+
 ## [2026-05-23] ARCHITECTURE — Claude.ai basic chat wiki auto-load failure documented
 
 **Session**: Manual test — new Claude.ai chat outside any project
