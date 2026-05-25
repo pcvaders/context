@@ -50,6 +50,9 @@
 | [[vault-setup-session]] | Founding session: Obsidian vault structure, nested vault discovery, Smart Connections MCP setup |
 | [[mcp-connector-management]] | MCP toggle patterns: disabled.json, SwiftBar plugin, Claude Desktop config race condition |
 | [[cli-printing-press]] | Agent-driven Go CLI + MCP server generator from any API spec — printing-press v4.9.0 |
+| [[claude-skills-agent-discovery-feb2026]] | Feb 2026 Skills ecosystem discovery: Agent Skills timeline, SKILL.md format, Skills vs NotebookLM, mobile gap |
+| [[ai-infrastructure-stack-mar2026]] | Mar 2026 AI stack convergence: inference cost management, Aug-Sep 2025 degradation incident, OpenClaw, TurboQuant, ARM AGI CPU |
+| [[djbrightone-spotify-skill-may2026]] | Spotify Monday workflow skill: 6-step pipeline, two-app architecture, launchd setup pattern, root cause of automation never firing |
 
 ## Syntheses
 
@@ -59,4 +62,4 @@
 
 ---
 
-Last updated: 2026-05-21
+Last updated: 2026-05-25 15:06 UTC

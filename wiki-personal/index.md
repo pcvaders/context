@@ -1,27 +1,27 @@
-# Personal Wiki — Index
+> Personal knowledge wiki — projects, tools, research notes, life admin, personal chats.
 
-> **Bridge layer**: Synced from iCloud/Obsidian by Claude Code via `vault github sync`.
-> Claude.ai (mobile/web) can read this via raw GitHub URL or GitHub MCP.
->
-> **Raw URL**: `https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki-personal/index.md`
-> **Last synced**: _(run `vault github sync` to update)_
+# Personal Wiki
 
----
+## Sections
 
-## How to read from Claude.ai (mobile/web)
+- [[concepts/]] — recurring themes, frameworks, patterns
+- [[entities/]] — tools, people, services, hardware
+- [[sources/]] — ingested conversations, docs, bookmarks
+- [[syntheses/]] — cross-source summaries and decisions
 
-Paste the raw URL above into any Claude.ai conversation and ask Claude to fetch it,
-or use `get_file_contents` via the GitHub MCP on `PCGamesplay1/Claude-skills` → `wiki-personal/index.md`.
+## Scope
 
----
+This wiki covers personal knowledge *outside* AI/LLM tooling:
+- Personal projects and tools
+- Research notes and bookmarks
+- Life admin reference (procedures, accounts, hardware)
+- Personal chat session summaries
 
-## Structure
+For AI/LLM tooling knowledge → see [[../wiki/index.md]]
+For Home Assistant → see [[../wiki-ha/index.md]]
 
-- **concepts/** — Frameworks, patterns, mental models
-- **entities/** — People, places, tools, projects
-- **sources/** — Notes from ingested content
-- **syntheses/** — Cross-cutting analysis
+## Stats
 
----
+Run `vault personal stats` for metrics.
 
-_Populated by `vault github sync` — run from Claude Code after updating the Obsidian vault._
+(as of 2026-05)

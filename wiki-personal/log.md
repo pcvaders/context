@@ -1,16 +1,13 @@
-# Personal Wiki — Log
+# Personal Wiki Operation Log
 
-> **Bridge layer**: Synced from iCloud/Obsidian by Claude Code.
-> **Raw URL**: `https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki-personal/log.md`
+> Append-only record of all personal wiki operations.
 
 ---
 
-## Log
+## [2026-05-22] INIT — Personal wiki created
 
-_Entries added by `vault github sync` or `/vault personal log`. Newest first._
-
-| Date | Event |
-|------|-------|
-| 2026-05-23 | Personal wiki GitHub bridge created |
+**Structure**: wiki-personal/ with concepts/, entities/, sources/, syntheses/, stats/
+**Scope**: personal chats, projects/tools, research notes, life admin
+**NotebookLM**: `64447237-2416-438c-8752-1c34ca85790f` — "Personal Knowledge Wiki 2026"
 
 ---

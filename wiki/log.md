@@ -4,47 +4,91 @@
 
 ---
 
-## [2026-05-25] WORKFLOW — Skills auto-sync hook + review reminder (2026-06-01)
+## [2026-05-25] INGEST — Claude.ai export b7ae9ea3 (Pass 1)
 
-**Session**: Claude Code remote (claude-sonnet-4-6)
+**Source**: Claude.ai export `data-b7ae9ea3` (26 conversations, Feb–Apr 2026, never previously ingested)
+**Agent**: Claude Code (claude-sonnet-4-6)
 
-**Changes made:**
-- `~/.claude/sync-skills.sh` created — copies all `skills/*/SKILL.md` from `PCGamesplay1/Claude-skills` repo to `~/.claude/skills/` on every session start
-- `SessionStart` hook added to `~/.claude/settings.json` — runs sync-skills.sh automatically each session
-- All 19 repo skills now registered as `/slash-commands` (vault, higgsfield, claude-api, skill-creator, + 15 others)
-- `/vault` slash command now works correctly
+**AI Wiki pages created (2):**
+- `sources/claude-skills-agent-discovery-feb2026.md` — Feb 2026 Skills ecosystem discovery session: Agent Skills timeline (Oct/Dec 2025), SKILL.md format, agentskills.io, Skills vs NotebookLM comparison, expert-tool mismatch, Apple/Gemini deal
+- `sources/ai-infrastructure-stack-mar2026.md` — Mar 2026 AI stack convergence: Anthropic inference cost management, Aug-Sep 2025 quality degradation incident (~30% Claude Code users affected), OpenClaw/Clawdbot (247k stars), MiniMax M2.7 pricing ($1.20/M tokens), TurboQuant KV compression (6x memory, 8x speed), ARM AGI CPU launch
 
-**⚠ OPEN ITEM — REVIEW BY 2026-06-01:**
-- Audit the full skills setup: confirm `/vault`, `/higgsfield` and key others work as expected
-- Check: should any skills be project-scoped (`.claude/settings.json`) rather than global?
-- Check: Mac local sessions use a different `~/.claude/` path — skills need separate sync there (run sync-skills.sh on Mac too, or add to Mac startup hook)
-- Consider: skills in `skills/` with no SKILL.md (subdirectory-only structures like higgsfield) — do they need a top-level SKILL.md dispatcher?
+**HA Wiki pages created (4):**
+- `wiki-ha/sources/proxmox-build-feb2026.md` — 418-msg build session: DNS fix, Alpine LXC PHP failure, TurnKey VM Nextcloud
+- `wiki-ha/sources/proxmox-dns-network-mar2026.md` — DNS/routing debug: "Destination Host Unreachable" = gateway missing, not DNS
+- `wiki-ha/sources/immich-proxmox-mar2026.md` — Immich LXC install: correct curl command, ML startup delay 30-60min, no pre-set creds
+- `wiki-ha/sources/nextcloud-lenovo-mar2026.md` — Nextcloud TurnKey VM: local-lvm disk, boot order critical gotcha, LVM setup
+
+**Pages updated (2):**
+- `wiki/index.md` — 2 new source entries, date updated
+- `wiki-ha/index.md` — 4 new source entries, date updated
+
+**Skipped (not wiki-worthy):**
+- "Learning summary from setup files" — Proxmox/Mac comparison, covered by HA wiki already
+- "AI values and human perspective" — general discussion, no durable technical knowledge
+- "Organizing multiple hard drives" — brief tool recommendation (WinCatalog), no original knowledge
+- "Ubuntu 22 repair on MacBook Pro" — personal tech support, EFI/GRUB repair steps
+- "Best photos from Thai destinations" — personal
+- "Understanding dispatch and open claw mechanics" — gaming
+- All 2025-10 conversations — pre-wiki, general discussion
+- Empty conversations (0 msgs)
+
+**Key facts now in wiki:**
+- Verified: Aug-Sep 2025 Claude quality degradation was infrastructure bugs, not deliberate throttling
+- Agent Skills announced Oct 2025, open standard Dec 2025, agentskills.io
+- OpenClaw started as Clawdbot by Peter Steinberger, Nov 2025, 247k GitHub stars
+- TurnKey VM (not Alpine LXC) for Nextcloud on Proxmox — boot order + local-lvm disk critical
+
+**Open items:**
+- Push plist python path fix to GitHub (commit 9d734ea, not yet pushed)
 
 ---
 
-## [2026-05-23] ARCHITECTURE — Claude.ai basic chat wiki auto-load failure documented
+## [2026-05-25] INGEST — Claude.ai export eec88378 (Pass 2 gap-fill)
 
-**Session**: Manual test — new Claude.ai chat outside any project
-**Agent**: Claude Sonnet 4.6 (claude.ai web)
+**Source**: Claude.ai export `data-eec88378` (42 conversations, Feb–May 20 2026, partially ingested May 21)
+**Agent**: Claude Code (claude-sonnet-4-6)
 
-**Finding**: Wiki auto-load block does not trigger outside the aiLLMwiki project.
+**HA Wiki pages created (1):**
+- `wiki-ha/sources/aqara-occupancy-delay-mar2026.md` — Aqara occupancy 15-min delay: ZHA write-back bug (parameters revert on re-pair), Z2M migration plan (Sonoff USB-P), HA UI stale entity reference bug
 
-**Root causes (3):**
-1. No project system prompt — fetch instruction only executes if present in project instructions
-2. No startup hook — Claude.ai has no mechanism to auto-execute instructions in basic chat
-3. No persistent wiki memory — userMemories contain summarised context only, not wiki contents or auto-load pattern
+**Key facts ingested:**
+- ZHA does not reliably write back Zigbee number entity parameters — they revert on re-pair/restart
+- ZHA and Z2M can run side by side permanently (separate USB dongles, no conflict)
+- HA UI: when editing automations, only touched steps update — verify ALL entity references after any sensor replacement
+- "Interlinked" keyword originated in HA sessions Mar 2026, predates AI wiki use
 
-**Result**: Claude starts blind. No wiki, no log, no open items. Full blank slate.
+**Skipped (already covered or not wiki-worthy):**
+- "Setup walkthrough" (May 18) — same 98-msg session as vault-setup-session.md (already ingested)
+- "MCP usage control and disable option" (May 20) — founding session for mcp-connector-management.md (already ingested)
+- "Creating/Enhancing ai-analysis skill" — claude.ai project file limitation (read-only) documented, but content overlaps with existing ai-analysis-skill.md concept page
+- "Skills in context" — HA skill versions, superseded by current SKILL.md
+- "Clean install of Immich on Proxmox" (Mar 11) — overlaps with b7ae9ea3 Immich session already ingested
+- All empty conversations
+- Stop-motion, dog puppet, quarterly summary, game chars — personal/non-technical
 
-**Workaround (if outside project):**
-- Manually ask Claude to fetch the raw GitHub URLs
-- Claude can `web_fetch` on demand — just not automatically
+**Pages updated (2):**
+- `wiki-ha/index.md` — 1 new source entry, date updated
+- `wiki/log.md` — this entry
 
-**Correct usage:**
-- Always open the **aiLLMwiki project** for wiki-aware sessions
-- Project system prompt is the only reliable auto-load trigger in Claude.ai
+---
 
-**Action**: No code changes required. Behaviour is by design.
+## [2026-05-25] INGEST — Manual entries (Pass 3): Spotify skill + launchd pattern
+
+**Source**: Claude Code session 2026-05-25 (not in any Claude.ai export)
+**Agent**: Claude Code (claude-sonnet-4-6)
+
+**AI Wiki pages created (1):**
+- `sources/djbrightone-spotify-skill-may2026.md` — Full djbrightone-spotify skill documentation: 6-step Monday pipeline, two-app Spotipy architecture, launchd setup pattern, root cause diagnosis (wrong python path + never installed to LaunchAgents)
+
+**Key facts ingested:**
+- launchd pattern for macOS automation: create plist in repo → cp to ~/Library/LaunchAgents/ → launchctl load
+- Always use `/opt/miniconda3/bin/python3` not `/usr/bin/python3` for scripts needing packages
+- First manual run 2026-05-25 15:15 UTC: 17 remixes, 18 DNB, 9 R&B, 98 EDM tracks
+- "Missing chat" was Claude.ai web session — separate from Claude Code, no shared history
+
+**Pages updated (1):**
+- `wiki/index.md` — 1 new source entry
 
 ---
 
@@ -342,6 +386,9 @@ Task → `semantic_search` wiki → find skill → `Skill` tool invokes it
 
 ---
 
+---
+---
+
 ## [2026-05-22] BASELINE — vault-stats infrastructure deployed
 
 **Script**: `vault-stats.sh` in vault root
@@ -376,6 +423,8 @@ vault-stats --baseline   # write immutable baseline (run once per phase)
 - Token est warn: 100,000 | critical: 200,000
 - Avg page size healthy: 300–2,000 chars (current: 2,696 — slightly above, monitor)
 - Embed delta healthy: ≤ 5
+
+---
 
 ---
 
@@ -414,3 +463,20 @@ vault index
 ```
 
 ---
+
+---
+
+## [2026-05-25] INTERLINKED + LINT — AI Analysis live use + docx incident
+
+**Operations:**
+1. Updated `wiki/concepts/ai-analysis-skill.md` — added First Live Use section, frameworks fired, structural finding ("in your genes"), scope note, updated TODO
+2. Created `wiki/syntheses/docx-incident-case-study.md` — full 6-stage AI Analysis post-mortem of Claude damaging a Word document
+3. Index regenerated — 54 pages (36 AI + 18 HA)
+
+**Lint findings:**
+- **Orphans (6):** `litellm-proxy`, `claude-code-sync`, `baseline-2026-05-22`, `skill-selection-guide`, `2026-05-20-aillmwiki-frontpage-plan`, `2026-05-20-aillmwiki-html-frontpage-design`
+- **Missing `summary:` frontmatter (many):** `ai-analysis-skill.md`, `skill-ecosystem.md`, `caveman-julius-brussee.md`, `cloakbrowser-cloakhq.md`, `codeburn-getagentseal.md`, `design-extract-manavarya09.md`, `karpathy-llm-wiki-gist.md`, plus 2 planning docs
+- **`[unsourced]` claims:** `claude-mobile-sync-issues-2026-05.md` + `entities/claude-code.md` — "Three view modes: Verbose/Normal/Summary" unverified
+- No lint changes made — flagged only, awaiting instruction
+
+**Key finding logged:** AI Analysis Skill first live application confirmed 2026-05-25. Structural finding: Claude's rush-before-listen pattern is genetic (training-level), not configurational. Same failure confirmed 3 months apart.
