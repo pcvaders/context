@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <key>Label</key>
+    <string>com.djbrightone.spotify.monday</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/voyager1/claude-skills/skills/djbrightone-spotify/scripts/run_monday_workflow.py</string>
+    </array>
+
+    <!-- Working directory keeps runtime state (added_remixes.txt, logs, dated output folders) in Drive -->
+    <key>WorkingDirectory</key>
+    <string>/Users/voyager1/Library/CloudStorage/GoogleDrive-pcgamesplay1@gmail.com/My Drive/spotify-remix</string>
+
+    <!-- Monday = Weekday 1, 14:00 LOCAL TIME.
+         UK: UTC in winter (GMT), UTC+1 in summer (BST late Mar-late Oct).
+         Winter: fires at 14:00 UTC. Summer (BST): fires at 13:00 UTC.
+         Change Hour to 13 during BST if you need strict 14:00 UTC year-round. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>1</integer>
+        <key>Hour</key>
+        <integer>14</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/voyager1/Library/Logs/djbrightone-spotify.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/voyager1/Library/Logs/djbrightone-spotify-error.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+</dict>
+</plist>
