@@ -8,7 +8,7 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/usr/bin/python3</string>
+        <string>/opt/miniconda3/bin/python3</string>
         <string>/Users/voyager1/claude-skills/skills/djbrightone-spotify/scripts/run_monday_workflow.py</string>
     </array>
 
