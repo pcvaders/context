@@ -289,3 +289,18 @@ if __name__ == '__main__':
             log(f"ERROR in {step_name}: {e}")
 
     log(f"\nWorkflow complete — {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')} UTC")
+
+    # Record pipeline ROI (non-blocking, best-effort)
+    try:
+        import subprocess, sys
+        roi_script = os.path.join(
+            os.path.expanduser("~"),
+            "Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault Icloud/Obsidian Vault AI/roi_evaluator.py"
+        )
+        if os.path.exists(roi_script):
+            subprocess.Popen(
+                [sys.executable, roi_script, "--pipeline", "spotify-monday"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+    except Exception:
+        pass
