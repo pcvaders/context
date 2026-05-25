@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <key>Label</key>
+    <string>com.voyager1.vault.daily-sync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/voyager1/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault Icloud/Obsidian Vault AI/vault.sh</string>
+        <string>ingest</string>
+        <string>all</string>
+    </array>
+
+    <!-- Daily at 22:00 LOCAL TIME.
+         UK: UTC in winter (GMT), UTC+1 in summer (BST late Mar–late Oct).
+         Summer (BST): fires at 21:00 UTC. Winter (GMT): fires at 22:00 UTC.
+         Change Hour to 21 during BST if you need strict 22:00 UTC year-round. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>22</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/voyager1/Library/Logs/vault-daily-sync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/voyager1/Library/Logs/vault-daily-sync-error.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+</dict>
+</plist>
