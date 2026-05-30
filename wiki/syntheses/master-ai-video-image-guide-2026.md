@@ -818,7 +818,7 @@ In professional movies, there is a whole team of people who add sound effects li
 
 *   **Ace Studio’s Video Composer:** This is the "Gold Standard" for filmmakers. It analyzes your video file and builds a soundtrack guided by the action on screen [15]. If a character picks up a rock, the AI detects that movement and adds a "thud" sound precisely at that moment [17]. (The AI Audio Tool Filmmakers Have Been Waiting For!, 11:42).
 *   **Meta’s SAM Audio:** Think of this as a **"visual stem splitter."** It can look at a messy recording of a busy street and "isolate" just the sound of a person talking or a car horn, much like how you might pull a specific ingredient out of a cake after it's baked [18]. (AI Video From Audio is BONKERS!, 99).
-*   **The "Room Tone" Secret:** Professional filmmakers always record a minute of "straight silence" on set to capture the background "hum" of a room [19]. You can use AI to generate "Working quietly in an office" sounds and run it low in your video to make your AI voices sound more like they are in a real place [19, 20]. (10 Secrets of AI Filmmaking You Need To Know!, 4:00).
+*   **The "Room Tone" Secret:** Professional filmmakers always record a minute of "straight silence" on set to capture the background "hum" of a room [19]. You can use AI to generate "Working quietly in an office" sounds and run it low in your video to make your AI voices sound more like they are in a real place [19, 20]. (10 Secrets of AI Filmmaking You Need To Know!, 4:00). <!-- secret-scan-ok: prose -->
 
 [IMAGE: A timeline from a video editor showing several layers: one for the video, one for the character's voice, and three layers of different background "ambience" sounds stacked together.]
 

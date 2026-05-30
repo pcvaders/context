@@ -57,17 +57,9 @@ for subdir in concepts entities sources syntheses stats; do
   fi
 done
 
-# wiki-ha lives at vault root, not inside wiki/
-WIKI_HA_SRC="$VAULT/wiki-ha"
-if [ -d "$WIKI_HA_SRC" ]; then
-  mkdir -p "$REPO_ROOT/wiki-ha"
-  rsync -a --delete \
-    --include='*/' \
-    --include='*.md' \
-    --exclude='*' \
-    "$WIKI_HA_SRC/" "$REPO_ROOT/wiki-ha/"
-  echo "  synced: wiki-ha/ (from vault root)"
-fi
+# NOTE: wiki-ha/ is PERSONAL tier (homelab/network) — NEVER synced to this public
+# repo (security classification, 2026-05-30). It lives only locally + in the private
+# voyager-hub. Do not re-add a wiki-ha sync block here.
 
 # ---------------------------------------------------------------------------
 # Copy helpers
@@ -88,13 +80,8 @@ copy_if_exists() {
 copy_if_exists "$WIKI_SRC/index.md"  "$WIKI_DIR/index.md"
 copy_if_exists "$WIKI_SRC/log.md"    "$WIKI_DIR/log.md"
 
-# Personal wiki
-if [ -d "$PERSONAL_SRC" ]; then
-  copy_if_exists "$PERSONAL_SRC/index.md" "$PERSONAL_DIR/index.md"
-  copy_if_exists "$PERSONAL_SRC/log.md"   "$PERSONAL_DIR/log.md"
-else
-  echo "  skip (not found): wiki-personal/ — $PERSONAL_SRC does not exist"
-fi
+# NOTE: wiki-personal/ is PERSONAL tier — NEVER synced to this public repo
+# (security classification, 2026-05-30). Local + private voyager-hub only.
 
 # Pinokio / Windows 11 guides (path-normalised: "Windows 11" → "windows-11")
 mkdir -p "$WIKI_DIR/pinokio/windows-11"
@@ -118,7 +105,27 @@ fi
 # ---------------------------------------------------------------------------
 cd "$REPO_ROOT"
 CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-git add wiki/ wiki-ha/ wiki-personal/ 2>/dev/null || git add wiki/ wiki-personal/ 2>/dev/null || true
+
+# ---------------------------------------------------------------------------
+# SECURITY GATE — scan AI-tier wiki/ before any PUBLIC push. Fail closed.
+# Personal tiers (wiki-ha, wiki-personal) are not synced here at all.
+# ---------------------------------------------------------------------------
+SCANNER="$HOME/projects/secret_scan.py"
+if [ -f "$SCANNER" ]; then
+  echo "Running secret scan on wiki/ before public push..."
+  if ! python3 "$SCANNER" "$WIKI_DIR"; then
+    echo ""
+    echo "ABORT: secret scan found issues (or a file was unreadable). Nothing pushed."
+    echo "Fix the flagged file(s) above, then re-run. This is the public-repo gate."
+    exit 1
+  fi
+  echo "  scan clean."
+else
+  echo "ABORT: secret scanner not found at $SCANNER — refusing to push to PUBLIC repo unscanned."
+  exit 1
+fi
+
+git add wiki/
 git diff --cached --quiet && echo "Nothing changed, skipping commit." && exit 0
 
 git commit -m "wiki: sync from iCloud vault ($TIMESTAMP)"
@@ -132,8 +139,7 @@ else
 fi
 
 echo ""
-echo "Done. Claude.ai can now read the latest wiki at:"
+echo "Done. Claude.ai can now read the latest AI wiki at:"
 echo "  https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki/index.md"
 echo "  https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki/log.md"
-echo "  https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki-personal/index.md"
-echo "  https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki-personal/log.md"
+echo "  (Personal tiers wiki-ha/ and wiki-personal/ are intentionally NOT public.)"

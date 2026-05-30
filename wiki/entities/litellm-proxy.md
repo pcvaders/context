@@ -18,7 +18,7 @@ tags: [llm, local, proxy, tooling]
 
 URL: `http://localhost:4000/ui`  
 Username: `admin`  
-Password: `litellm-local`
+Password: _(redacted — see private `voyager-hub`; rotated 2026-05-30)_ <!-- secret-scan-ok: redacted, rotated -->
 
 Credentials set via `ui_username`/`ui_password` in `general_settings` — not DB auth. LiteLLM proxy requires PostgreSQL for DB-backed auth; SQLite not supported (Prisma schema missing). `ui_username`/`ui_password` bypasses DB requirement entirely.
 
@@ -26,7 +26,7 @@ Credentials set via `ui_username`/`ui_password` in `general_settings` — not DB
 
 ```bash
 curl http://localhost:4000/v1/models \
-  -H "Authorization: Bearer litellm-local"
+  -H "Authorization: Bearer $LITELLM_KEY"   # value in private voyager-hub, not here
 ```
 
 ## Models (as of 2026-05)

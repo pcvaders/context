@@ -53,7 +53,7 @@ Major release (as of 2026-05) [unsourced — from mobile session notes, verify a
 - New session sidebar — parallel task management
 - Drag-and-drop workspace layout
 - Integrated terminal + file editor
-- SSH support on Mac [unsourced — previously stated Linux only]
+- SSH support on Mac [unsourced — previously stated Linux only] <!-- secret-scan-ok: feature note, no secret -->
 - CLI plugin parity — desktop plugins work same as terminal
 - Three view modes: Verbose / Normal / Summary [unsourced]
 - Usage button — shows context window + session token usage
