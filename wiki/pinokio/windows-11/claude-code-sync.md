@@ -1,246 +1,145 @@
-> How to mirror a Mac Claude Code setup onto Windows 11 — CLAUDE.md, skills, commands, hooks, MCP, and the AI LLM Wiki loader.
+> Last updated: 2026-05-31. Full current Mac state.
 
 # Claude Code: Mac → Windows 11 Sync
 
+## Auto-sync on session start
+
+**Yes — fully automatic.** Once set up, every new Claude Code session on Win11:
+1. `session-start.ps1` fires → `git pull voyager-hub` → latest CONTEXT.md + memory loaded
+2. Memory nodes available immediately
+3. Wiki readable via GitHub raw URLs (always current)
+
+No manual steps after initial setup.
+
 ## What lives where
 
-| Item | Mac path | Windows path |
-|------|----------|--------------|
+| Item | Mac | Windows |
+|---|---|---|
 | Global config | `~/.claude/settings.json` | `C:\Users\PCG1\.claude\settings.json` |
-| Global instructions | `~/.claude/CLAUDE.md` | `C:\Users\PCG1\.claude\CLAUDE.md` |
-| Skills folder | `~/.claude/skills/` | `C:\Users\PCG1\.claude\skills\` |
-| Commands folder | `~/.claude/commands/` | `C:\Users\PCG1\.claude\commands\` |
-| Hooks folder | `~/.claude/hooks/` | `C:\Users\PCG1\.claude\hooks\` |
-| Project memory | `~/.claude/projects/<slug>/memory/` | `C:\Users\PCG1\.claude\projects\<slug>\memory\` |
-| Credentials | `~/.claude/.credentials.json` | `C:\Users\PCG1\.claude\.credentials.json` |
+| Skills | `~/.claude/skills/` | `C:\Users\PCG1\.claude\skills\` |
+| Hooks | `~/.claude/hooks/` | `C:\Users\PCG1\.claude\hooks\` |
+| Commands | `~/.claude/commands/` | `C:\Users\PCG1\.claude\commands\` |
+| voyager-hub | `~/voyager-hub/` | `C:\Users\PCG1\voyager-hub\` |
+| Projects | `~/projects/` | `C:\Users\PCG1\projects\` |
 
----
+## Current Mac skills (2026-05-31)
 
-## Current Mac state (2026-05-23)
+Copy all except `tests/`:
+caveman · cavecrew · caveman-commit · caveman-compress · caveman-help · caveman-review · caveman-stats · gepeto · higgsfield-generate · higgsfield-marketplace-cards · higgsfield-product-photoshoot · higgsfield-soul-id · memory.md · memory-reconcile-subagent.md · obsidian-wiki-memory · pinokio · screenwriter · topview
 
-### Skills (`~/.claude/skills/`)
+## Current hooks
 
-| Skill | Notes |
-|-------|-------|
-| `caveman` | ~65% output token compression |
-| `cavecrew` | compressed subagent delegation |
-| `caveman-commit` | commit message helper |
-| `caveman-compress` | manual compression |
-| `caveman-help` | caveman docs |
-| `caveman-review` | code review |
-| `caveman-stats` | token savings stats |
-| `obsidian-wiki-memory` | Obsidian vault router |
-| `gepeto` | Pinokio launcher dev guide ✓ Windows has |
-| `pinokio` | Pinokio runtime control ✓ Windows has |
-| `paperpress-cli` | Paperpress vault publishing |
-| `screenwriter` | screenwriting helper |
-| `higgsfield-*` | Higgsfield AI image tools |
+| File | Win11? |
+|---|---|
+| `caveman-activate.js` | ✅ |
+| `caveman-config.js` | ✅ |
+| `caveman-mode-tracker.js` | ✅ |
+| `caveman-stats.js` | ✅ |
+| `caveman-statusline.ps1` | ✅ |
+| `skill-enforcer.py` | ✅ |
+| `skill-tracker.py` | ✅ |
+| `skill-recommender.py` | ✅ |
+| `roi-post-session.py` | ✅ |
+| `package.json` | ✅ |
+| `session-start.sh` | ❌ skip (Mac bash) |
+| `caveman-statusline.sh` | ❌ skip (Mac bash) |
+| `wiki-index-regenerate.py` | ❌ skip (Mac paths) |
 
-### Commands (`~/.claude/commands/`)
+**Create `session-start.ps1`** — see windows-settings.json folder.
 
-| File | Slash command | Notes |
-|------|---------------|-------|
-| `aillmwiki.md` | `/aillmwiki` | AI LLM Wiki assistant mode |
-| `interlinked.md` | `/interlinked` | semantic wiki search via `semantic-clip` |
-| `vault.md` | `/vault` | vault management shortcuts |
+## Setup steps
 
-> **Note:** `aillmwiki` is a command (not a skill). It lives in `commands/`, not `skills/`.
-
-### Hooks (`~/.claude/hooks/`)
-
-| File | Event | Notes |
-|------|-------|-------|
-| `caveman-activate.js` | SessionStart | writes caveman flag, emits ruleset |
-| `caveman-config.js` | — | shared config (required by all JS hooks) |
-| `caveman-mode-tracker.js` | UserPromptSubmit | tracks mode changes |
-| `caveman-stats.js` | — | stats helper |
-| `caveman-statusline.sh` | statusLine | Mac (bash) |
-| `caveman-statusline.ps1` | statusLine | **Windows (PowerShell) — already written** |
-| `skill-enforcer.py` | PreToolUse | blocks Bash/Edit/Write if no skill invoked |
-| `skill-tracker.py` | PostToolUse | writes skill-invoked flag |
-| `wiki-index-regenerate.py` | PostToolUse | regenerates wiki index — Mac paths, skip on Windows |
-| `package.json` | — | `{"type":"commonjs"}` — required for JS hooks |
-
-### Active hooks (Mac `settings.json`)
-
-- **SessionStart**: `caveman-activate.js` + `optimize-vault.js` (async vault dedup, iCloud path)
-- **UserPromptSubmit**: `caveman-mode-tracker.js`
-- **PreToolUse** `Bash|Edit|Write`: `skill-enforcer.py`
-- **PostToolUse**: `wiki-index-regenerate.py` + `skill-tracker.py`
-
-### CLAUDE.md
-
-Currently empty on Mac. Nothing to copy — create a Windows-specific one.
-
----
-
-## Step-by-step sync
-
-### 1. Prerequisites — install on Windows
-
+### 1. Prerequisites
 ```powershell
 winget install OpenJS.NodeJS
 winget install Python.Python.3
+winget install Git.Git
+node --version && python --version && git --version
 ```
 
-Verify:
+### 2. Clone voyager-hub (ONE TIME)
 ```powershell
-node --version
-python --version
+git clone https://github.com/PCGamesplay1/voyager-hub.git C:\Users\PCG1\voyager-hub
 ```
 
-### 2. Copy skills
+### 3. Clone wiki + projects (ONE TIME)
+```powershell
+mkdir C:\Users\PCG1\projects
+git clone https://github.com/PCGamesplay1/Claude-skills.git C:\Users\PCG1\projects\claude-skills
+```
 
-On Mac, zip and transfer via iCloud or USB:
-
+### 4. Copy skills + hooks from Mac
 ```bash
-cd ~/.claude && zip -r claude-skills.zip skills/
+cd ~/.claude
+zip -r /tmp/claude-skills.zip skills/
+zip -r /tmp/claude-hooks.zip hooks/
+zip -r /tmp/claude-commands.zip commands/
+```
+Transfer ZIPs → extract to Win11 paths.
+
+### 5. Create `session-start.ps1`
+```powershell
+# C:\Users\PCG1\.claude\hooks\session-start.ps1
+$ErrorActionPreference = "SilentlyContinue"
+Write-Output "[SessionStart] Memory reconcile starting..."
+$hub = "C:\Users\PCG1\voyager-hub"
+if (Test-Path $hub) {
+    Set-Location $hub
+    git pull origin main 2>&1 | Out-Null
+    Write-Output "[SessionStart] voyager-hub pulled"
+} else {
+    Write-Output "[SessionStart] WARNING: voyager-hub not found — clone it first"
+}
+$mem = "C:\Users\PCG1\.claude\projects\-Users-PCG1\memory"
+if (Test-Path $mem) {
+    $n = (Get-ChildItem $mem -Filter "*.md").Count
+    Write-Output "[SessionStart] Auto-memory: $n nodes available"
+}
+Write-Output "[SessionStart] Done"
 ```
 
-Extract to `C:\Users\PCG1\.claude\skills\` on Windows.
+### 6. Deploy settings.json
+Use `windows-settings.json` (same folder). Place at `C:\Users\PCG1\.claude\settings.json`.
 
-Priority skills (minimum viable set):
-- `skills/caveman/`
-- `skills/cavecrew/`
-- `skills/obsidian-wiki-memory/`
+### 7. Create CLAUDE.md
+```markdown
+# Claude Code — Win11
 
-### 3. Copy commands
+## Memory bootstrap
+voyager-hub auto-pulled each session.
+CONTEXT.md: C:\Users\PCG1\voyager-hub\memory\CONTEXT.md
 
-```bash
-cd ~/.claude && zip -r claude-commands.zip commands/
+## AI LLM Wiki
+https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/wiki/index.md
+Local: C:\Users\PCG1\projects\claude-skills\wiki\
+
+## Active projects
+- Isle of Dogs: C:\Users\PCG1\projects\claude-skills\isle-of-dogs\CLAUDE.md
+- ComfyUI: PRIMARY target — RTX 5070ti
+  Install: comfy-cli + LTX 2.3 + Cameraman IC-LoRA
+  Pipeline: wiki/concepts/higgsfield-comfyui-pipeline-architecture.md
+
+## Paths
+Home: C:\Users\PCG1 | Python: python | Node: node | Shell: PowerShell
 ```
 
-Extract to `C:\Users\PCG1\.claude\commands\`.
-
-Commands are plain markdown — no path rewriting needed.
-
-### 4. Copy hooks
-
-```bash
-cd ~/.claude && zip -r claude-hooks.zip hooks/
+### 8. Restart Claude Code
+Session should show:
+```
+[SessionStart] voyager-hub pulled
+[SessionStart] Auto-memory: N nodes available
+CAVEMAN MODE ACTIVE
 ```
 
-Extract to `C:\Users\PCG1\.claude\hooks\`.
-
-**Required files:**
-
-| File | Cross-platform? |
-|------|----------------|
-| `caveman-activate.js` | ✓ yes |
-| `caveman-config.js` | ✓ yes |
-| `caveman-mode-tracker.js` | ✓ yes |
-| `caveman-stats.js` | ✓ yes |
-| `caveman-statusline.ps1` | ✓ Windows-native |
-| `skill-enforcer.py` | ✓ yes (uses `tempfile.gettempdir()`) |
-| `skill-tracker.py` | ✓ yes (uses `tempfile.gettempdir()`) |
-| `package.json` | ✓ yes |
-| `wiki-index-regenerate.py` | ✗ skip — Mac paths hardcoded |
-| `caveman-statusline.sh` | ✗ skip — bash only |
-
-### 5. Deploy settings.json
-
-Use the ready-made template: `[[windows-settings]]` (same folder as this file).
-
-Place at `C:\Users\PCG1\.claude\settings.json`.
-
-**Do NOT copy Mac's `settings.json` directly** — Node path (`/opt/homebrew/...`) and statusLine command are Mac-only.
-
-Key differences:
+## Win11 differences
 
 | | Mac | Windows |
-|--|-----|---------|
-| Node path | `/opt/homebrew/Cellar/node/.../bin/node` | `node` |
+|---|---|---|
 | Python | `python3` | `python` |
-| StatusLine | `bash "...caveman-statusline.sh"` | `powershell -NoProfile -File "...caveman-statusline.ps1"` |
-| `optimize-vault.js` | included | optional — add if iCloud installed |
-| `wiki-index-regenerate.py` | PostToolUse | **omit** |
-
-**Optional — add vault dedup to SessionStart if iCloud for Windows is installed:**
-
-```json
-{
-  "type": "command",
-  "command": "node \"C:\\Users\\PCG1\\iCloudDrive\\iCloud~md~obsidian\\Obsidian Vault Icloud\\Obsidian Vault AI\\optimize-vault.js\" 2>NUL",
-  "timeout": 15,
-  "statusMessage": "Optimizing vault...",
-  "async": true
-}
-```
-
-### 6. Create CLAUDE.md
-
-Mac's `CLAUDE.md` is empty. Create `C:\Users\PCG1\.claude\CLAUDE.md`:
-
-```markdown
-## AI LLM Wiki
-
-Vault: C:\Users\PCG1\iCloudDrive\iCloud~md~obsidian\Obsidian Vault Icloud\Obsidian Vault AI
-
-Sections:
-- wiki/concepts/ — AI/LLM concepts
-- wiki/entities/ — tools, models, people
-- wiki/syntheses/ — cross-cutting analysis
-- wiki/agents/claude-primary/inbox/ — active context
-
-Use /aillmwiki for full wiki assistant mode.
-```
-
-### 7. Plugins
-
-Plugins auto-install when Claude Code restarts with the new `settings.json` (which includes `extraKnownMarketplaces`). Or install manually:
-
-```
-claude plugins install caveman@caveman
-claude plugins install karpathy-skills@karpathy-skills
-claude plugins install antigravity-awesome-skills@antigravity-awesome-skills
-```
-
----
-
-## Quick checklist
-
-- [ ] `node` in PATH
-- [ ] `python` in PATH
-- [ ] `skills/caveman/` copied
-- [ ] `skills/cavecrew/` copied
-- [ ] `skills/obsidian-wiki-memory/` copied
-- [ ] `skills/gepeto/` ✓ present
-- [ ] `skills/pinokio/` ✓ present
-- [ ] `commands/aillmwiki.md` copied
-- [ ] `commands/interlinked.md` copied
-- [ ] `commands/vault.md` copied
-- [ ] `hooks/caveman-activate.js` copied
-- [ ] `hooks/caveman-config.js` copied
-- [ ] `hooks/caveman-mode-tracker.js` copied
-- [ ] `hooks/skill-enforcer.py` copied
-- [ ] `hooks/skill-tracker.py` copied
-- [ ] `hooks/package.json` copied
-- [ ] `hooks/caveman-statusline.ps1` ✓ present
-- [ ] `settings.json` deployed from `[[windows-settings]]` template
-- [ ] `CLAUDE.md` created
-- [ ] Claude Code restarted → plugins auto-installed
-
----
-
-## Windows-specific differences
-
-| Behavior | Mac | Windows |
-|----------|-----|---------|
-| Shell in hooks | `bash -c "..."` | `powershell -NoProfile -Command "..."` |
-| Path separator | `/` | `\` (escape as `\\` in JSON) |
-| Home dir | `~` | `C:\Users\PCG1` |
-| Hook env vars | `$HOME` | `$env:USERPROFILE` |
-| Node location | Homebrew absolute path | `node` from PATH |
-| Python command | `python3` | `python` |
-| iCloud Drive | `~/Library/Mobile Documents/...` | `C:\Users\PCG1\iCloudDrive\...` |
-| Temp dir (flag files) | `/var/folders/.../T/` | `C:\Users\PCG1\AppData\Local\Temp` |
-
----
+| Node | `/opt/homebrew/.../node` | `node` |
+| Home | `~` | `C:\Users\PCG1` |
+| Shell | bash | PowerShell |
+| iCloud | `~/Library/Mobile Documents/...` | `C:\Users\PCG1\iCloudDrive\...` |
 
 ## Related
-
-- [[claude-code]]
-- [[windows-11]]
-- [[pinokio]]
-- [[aillmwiki]]
-- [[windows-settings]]
+[[claude-code]] · [[windows-11]] · [[pinokio]] · [[isle-of-dogs-project]] · [[comfyui]]

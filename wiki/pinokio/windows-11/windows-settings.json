@@ -8,6 +8,13 @@
             "command": "node \"C:\\Users\\PCG1\\.claude\\hooks\\caveman-activate.js\"",
             "timeout": 5,
             "statusMessage": "Loading caveman mode..."
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \"C:\\Users\\PCG1\\.claude\\hooks\\session-start.ps1\"",
+            "timeout": 30,
+            "statusMessage": "Syncing memory...",
+            "async": true
           }
         ]
       }
@@ -15,6 +22,12 @@
     "UserPromptSubmit": [
       {
         "hooks": [
+          {
+            "type": "command",
+            "command": "python \"C:\\Users\\PCG1\\.claude\\hooks\\skill-recommender.py\"",
+            "timeout": 5,
+            "statusMessage": "Checking skills..."
+          },
           {
             "type": "command",
             "command": "node \"C:\\Users\\PCG1\\.claude\\hooks\\caveman-mode-tracker.js\"",
@@ -72,22 +85,13 @@
   },
   "extraKnownMarketplaces": {
     "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
+      "source": { "source": "github", "repo": "JuliusBrussee/caveman" }
     },
     "karpathy-skills": {
-      "source": {
-        "source": "github",
-        "repo": "forrestchang/andrej-karpathy-skills"
-      }
+      "source": { "source": "github", "repo": "forrestchang/andrej-karpathy-skills" }
     },
     "antigravity-awesome-skills": {
-      "source": {
-        "source": "github",
-        "repo": "PCGamesplay1/antigravity-awesome-skills"
-      }
+      "source": { "source": "github", "repo": "PCGamesplay1/antigravity-awesome-skills" }
     }
   },
   "effortLevel": "low",
