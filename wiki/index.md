@@ -1,4 +1,4 @@
-# AI Agentic Wiki — Index
+﻿# AI Agentic Wiki — Index
 
 > Master index of all wiki pages. Updated as new pages are created.
 
@@ -8,6 +8,7 @@
 - **[[entities/]]** — Tools, models, people, orgs: Claude Code, Karpathy, Smart Connections, Obsidian, etc.
 - **[[sources/]]** — Summaries of ingested sources: papers, gists, articles, repos
 - **[[syntheses/]]** — Cross-cutting analysis: comparisons, frameworks, emergent patterns
+- **[[pinokio/]]** — Pinokio launcher + Windows 11 local AI stack
 
 ## Concepts
 
@@ -23,6 +24,8 @@
 | [[ai-cost-observability]] | Tools + practices for measuring and optimizing AI token spend |
 | [[skill-ecosystem]] | 4-marketplace Claude Code skill stack: superpowers, antigravity, karpathy, caveman |
 | [[agent-native-cli]] | Design pattern for LLM-consumable CLIs: auto-JSON, typed exit codes, --compact, SQLite |
+| [[claude-ai-context-loading]] | Project Instructions / CLAUDE.md / hooks pattern for persistent context across Claude surfaces |
+| [[mcp]] | Model Context Protocol — Anthropic standard for tool/resource exposure to LLM agents |
 
 ## Entities
 
@@ -34,6 +37,15 @@
 | [[smart-connections-mcp]] | ~~MCP server~~ DEPRECATED 2026-05-22 — replaced by [[semantic-clip]] |
 | [[semantic-clip]] | Node.js CLI — local semantic search via `.smart-env` vecs, zero MCP overhead |
 | [[julius-brussee]] | Creator of caveman token compression skill and ecosystem |
+| [[litellm-proxy]] | LiteLLM proxy — unified OpenAI-compatible gateway routing to multiple LLM backends |
+
+## Pinokio / Windows 11
+
+| Page | Summary |
+|---|---|
+| [[pinokio/pinokio]] | One-click AI app launcher — manages local AI tools, Python envs, model downloads |
+| [[pinokio/Windows 11/windows-11]] | Windows 11 Pro host — specs, local AI stack (Ollama + Hermes + Open WebUI) |
+| [[pinokio/Windows 11/claude-code-sync]] | Guide: mirror Mac Claude Code setup to Windows 11 — skills, hooks, commands, settings.json |
 
 ## Sources
 
@@ -50,16 +62,15 @@
 | [[vault-setup-session]] | Founding session: Obsidian vault structure, nested vault discovery, Smart Connections MCP setup |
 | [[mcp-connector-management]] | MCP toggle patterns: disabled.json, SwiftBar plugin, Claude Desktop config race condition |
 | [[cli-printing-press]] | Agent-driven Go CLI + MCP server generator from any API spec — printing-press v4.9.0 |
-| [[claude-skills-agent-discovery-feb2026]] | Feb 2026 Skills ecosystem discovery: Agent Skills timeline, SKILL.md format, Skills vs NotebookLM, mobile gap |
-| [[ai-infrastructure-stack-mar2026]] | Mar 2026 AI stack convergence: inference cost management, Aug-Sep 2025 degradation incident, OpenClaw, TurboQuant, ARM AGI CPU |
-| [[djbrightone-spotify-skill-may2026]] | Spotify Monday workflow skill: 6-step pipeline, two-app architecture, launchd setup pattern, root cause of automation never firing |
+| [[claude-mobile-sync-issues-2026-05]] | Mobile sync root causes, GitHub bridge, daemon bug fix, Claude desktop redesign notes (May 2026) |
 
 ## Syntheses
 
 | Page | Summary |
 |---|---|
 | [[rag-vs-llm-wiki]] | Comparison of RAG and LLM Wiki knowledge architectures |
+| [[skill-selection-guide]] | Task→skill mapping, workflow phase map, anti-patterns for Claude Code skill selection |
 
 ---
 
-Last updated: 2026-05-25 15:06 UTC
+Last updated: 2026-05-31 00:13 UTC
