@@ -4,6 +4,28 @@
 
 ---
 
+## [2026-05-31] INTERLINKED — entity pages for wiki-clip, smart-clip, obsidian-wiki-memory, interlinked
+
+**Agent:** Claude Code (claude-sonnet-4-6) — Mac
+
+**Created 4 entity pages (open items cleared):**
+- `entities/wiki-clip.md` — Tier 1 keyword search CLI tool
+- `entities/smart-clip.md` — three-tier search orchestrator (wiki-clip → semantic-clip → NLM)
+- `entities/obsidian-wiki-memory.md` — Claude Code skill for vault context loading
+- `entities/interlinked.md` — Claude Code skill for wiki INGEST/QUERY/LINT operations
+
+**Also fixed this session (outside wiki):**
+- vault daily-sync LaunchAgent: replaced iCloud vault.sh call with ~/projects/vault.sh copy; granted /bin/bash Full Disk Access → nightly 22:00 sync now fully automated
+- Panel server: fixed index.html (was old version, missing memory section); 50 AI wiki cards now visible
+- Manual sync run: wiki caught up from 2026-05-22 → 2026-05-31 (commit d226828)
+- Memory system (Plan 2) complete: voyager-hub, CONTEXT.md, wiki_classify.py, session hooks, Chat/Cowork/CCR bootstrapped
+
+**Open items remaining:**
+- Ingest `semantic-clip.js` as source page (`sources/semantic-clip.md`)
+- Embedding delta: 25 .ajson vs 70 wiki pages (Smart Connections not fully indexed)
+
+---
+
 ## [2026-05-22] INGEST — Claude.ai Mobile Sync & Mac Desktop Issues (May 2026)
 
 **Source**: Mobile debugging session notes (Claude.ai mobile)
