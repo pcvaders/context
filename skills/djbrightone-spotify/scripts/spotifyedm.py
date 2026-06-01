@@ -3,11 +3,18 @@ from spotipy.oauth2 import SpotifyOAuth
 import datetime
 import os
 import time
+import keyring
 from spotipy.exceptions import SpotifyException
 
-# ── Credentials (App 1) ────────────────────────────────────────
-SPOTIPY_CLIENT_ID     = '***REMOVED***'
-SPOTIPY_CLIENT_SECRET = '***REMOVED***'
+# ── Credentials (App 1) — keychain 'djbrightone-spotify' or env DJB_SPOTIFY_<KEY> ──
+def _secret(key):
+    val = os.environ.get(f"DJB_SPOTIFY_{key}") or keyring.get_password('djbrightone-spotify', key)
+    if not val:
+        raise RuntimeError(f"Missing Spotify credential '{key}' (env DJB_SPOTIFY_{key} or keychain).")
+    return val
+
+SPOTIPY_CLIENT_ID     = _secret('CLIENT_ID_APP1')
+SPOTIPY_CLIENT_SECRET = _secret('CLIENT_SECRET_APP1')
 SPOTIPY_REDIRECT_URI  = 'http://127.0.0.1:8888/callback'
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(

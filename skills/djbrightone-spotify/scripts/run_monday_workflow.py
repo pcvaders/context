@@ -3,13 +3,31 @@ from spotipy.oauth2 import SpotifyOAuth
 import datetime
 import os
 import time
+import keyring
 from spotipy.exceptions import SpotifyException
 
 # ── Credentials ────────────────────────────────────────────────────────────────
-CLIENT_ID_APP1     = '***REMOVED***'   # release_radar, remix, edm
-CLIENT_SECRET_APP1 = '***REMOVED***'
-CLIENT_ID_APP2     = '***REMOVED***'   # dnb, rnb
-CLIENT_SECRET_APP2 = '***REMOVED***'
+# Secrets live in the macOS keychain (service 'djbrightone-spotify'), with an
+# optional env-var override (DJB_SPOTIFY_<KEY>). NEVER hardcode secrets here —
+# this file lives in a PUBLIC repo.
+# Seed the keychain once (run locally, do not commit the values):
+#   python3 -c "import keyring; keyring.set_password('djbrightone-spotify','CLIENT_ID_APP1','<id>')"
+#   ...repeat for CLIENT_SECRET_APP1, CLIENT_ID_APP2, CLIENT_SECRET_APP2
+_KEYCHAIN_SERVICE = 'djbrightone-spotify'
+
+def _secret(key):
+    val = os.environ.get(f"DJB_SPOTIFY_{key}") or keyring.get_password(_KEYCHAIN_SERVICE, key)
+    if not val:
+        raise RuntimeError(
+            f"Missing Spotify credential '{key}'. Set env DJB_SPOTIFY_{key} or add it to "
+            f"keychain service '{_KEYCHAIN_SERVICE}'."
+        )
+    return val
+
+CLIENT_ID_APP1     = _secret('CLIENT_ID_APP1')      # release_radar, remix, edm
+CLIENT_SECRET_APP1 = _secret('CLIENT_SECRET_APP1')
+CLIENT_ID_APP2     = _secret('CLIENT_ID_APP2')      # dnb, rnb
+CLIENT_SECRET_APP2 = _secret('CLIENT_SECRET_APP2')
 REDIRECT_URI       = 'http://127.0.0.1:8888/callback'
 SCOPE              = (
     "playlist-modify-public playlist-modify-private "
