@@ -12,7 +12,7 @@ from spotipy.exceptions import SpotifyException
 # this file lives in a PUBLIC repo.
 # Seed the keychain once (run locally, do not commit the values):
 #   python3 -c "import keyring; keyring.set_password('djbrightone-spotify','CLIENT_ID_APP1','<id>')"
-#   ...repeat for CLIENT_SECRET_APP1, CLIENT_ID_APP2, CLIENT_SECRET_APP2
+#   ...repeat for CLIENT_SECRET_APP1
 _KEYCHAIN_SERVICE = 'djbrightone-spotify'
 
 def _secret(key):
@@ -24,10 +24,8 @@ def _secret(key):
         )
     return val
 
-CLIENT_ID_APP1     = _secret('CLIENT_ID_APP1')      # release_radar, remix, edm
+CLIENT_ID_APP1     = _secret('CLIENT_ID_APP1')
 CLIENT_SECRET_APP1 = _secret('CLIENT_SECRET_APP1')
-CLIENT_ID_APP2     = _secret('CLIENT_ID_APP2')      # dnb, rnb
-CLIENT_SECRET_APP2 = _secret('CLIENT_SECRET_APP2')
 REDIRECT_URI       = 'http://127.0.0.1:8888/callback'
 SCOPE              = (
     "playlist-modify-public playlist-modify-private "
@@ -286,17 +284,13 @@ if __name__ == '__main__':
         client_id=CLIENT_ID_APP1, client_secret=CLIENT_SECRET_APP1,
         redirect_uri=REDIRECT_URI, scope=SCOPE
     ))
-    sp2 = spotipy.Spotify(auth_manager=SpotifyOAuth(
-        client_id=CLIENT_ID_APP2, client_secret=CLIENT_SECRET_APP2,
-        redirect_uri=REDIRECT_URI, scope=SCOPE
-    ))
 
     steps = [
         ("Step 1 — Release Radar Sync",    lambda: sync_release_radar(sp1)),
         ("Step 2 — Release Radar Remixes", lambda: release_radar_remixes(sp1)),
         ("Step 3 — Broad Remix Search",    lambda: broad_remix_search(sp1)),
-        ("Step 4 — DNB New Releases",      lambda: genre_releases(sp2, "DNB", [DNB_REF_1, DNB_REF_2], "DNB")),
-        ("Step 5 — R&B New Releases",      lambda: genre_releases(sp2, "R&B", [RNB_REF], "RNB")),
+        ("Step 4 — DNB New Releases",      lambda: genre_releases(sp1, "DNB", [DNB_REF_1, DNB_REF_2], "DNB")),
+        ("Step 5 — R&B New Releases",      lambda: genre_releases(sp1, "R&B", [RNB_REF], "RNB")),
         ("Step 6 — EDM New Releases",      lambda: genre_releases(sp1, "EDM", [EDM_REF], "EDM")),
     ]
 

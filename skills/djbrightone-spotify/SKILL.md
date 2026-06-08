@@ -113,7 +113,6 @@ tail -f ~/Library/Logs/djbrightone-spotify.log
 
 | App | Client ID prefix | Scripts |
 |---|---|---|
-| App 1 | `5e329e33...` | release_radar, remix, EDM |
-| App 2 | `168ae63f...` | DNB, R&B, maintain_artists |
+| App 1 | `5e329e33...` | all steps |
 
-Two separate Spotify developer apps are used to stay within Spotify's dev mode limits.
+Single app handles all calls. APP2 (`168ae63f...`) retired 2026-06-08 — single-user workflow has no quota benefit from splitting.
