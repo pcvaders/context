@@ -38,7 +38,7 @@ SCOPE              = (
 # If blocked (404/403), Step 1 skips gracefully and Steps 2–6 run on the existing copy.
 # Manual fallback: Spotify app → Release Radar → Select All → Add to playlist → Release Radar Copy
 RELEASE_RADAR_ID      = '37i9dQZEVXboEoTOVLo0jR'
-RELEASE_RADAR_COPY_ID = '5eY6y3BV1LU6fQoAfNRKsl'
+RELEASE_RADAR_COPY_ID = '4bKMXRMd6B8SbnwIKiG12m'
 DNB_REF_1             = '0yybc8ObzsQyoAE55ILZGt'   # user DNB reference
 DNB_REF_2             = '5Ik2wnYMLvpqhvdklDBVR0'   # promoter DNB reference (read-only)
 RNB_REF               = '1cuMaxb31EuQdg8jMp6yqv'

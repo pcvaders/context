@@ -38,7 +38,7 @@ python3 ~/claude-skills/skills/djbrightone-spotify/scripts/run_monday_workflow.p
 | Name | ID | Owner |
 |---|---|---|
 | Release Radar | `37i9dQZEVXboEoTOVLo0jR` | Spotify |
-| Release Radar Copy | `5eY6y3BV1LU6fQoAfNRKsl` | User |
+| Release Radar Copy | `4bKMXRMd6B8SbnwIKiG12m` | User |
 | DNB user ref | `0yybc8ObzsQyoAE55ILZGt` | User (editable) |
 | DNB promoter ref | `5Ik2wnYMLvpqhvdklDBVR0` | Promoter (read-only) |
 | R&B ref | `1cuMaxb31EuQdg8jMp6yqv` | User (editable) |
