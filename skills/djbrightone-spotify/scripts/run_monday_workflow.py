@@ -152,6 +152,11 @@ def release_radar_remixes(sp):
     today = datetime.date.today().strftime('%Y-%m-%d')
     seen_isrcs, track_ids = set(), []
 
+    previously_added = set()
+    if os.path.exists(ADDED_REMIXES_FILE):
+        with open(ADDED_REMIXES_FILE, 'r', encoding='utf-8') as f:
+            previously_added = {l.strip() for l in f if l.strip()}
+
     copy_items = get_all_playlist_tracks(sp, RELEASE_RADAR_COPY_ID)
     if not copy_items:
         log("  Release Radar Copy is empty — nothing to scan.")
@@ -163,6 +168,8 @@ def release_radar_remixes(sp):
         if not track or 'remix' not in track['name'].lower():
             continue
         if not is_english(track):
+            continue
+        if track['id'] in previously_added:
             continue
         code = get_isrc(track)
         if code and code in seen_isrcs:
@@ -178,6 +185,8 @@ def release_radar_remixes(sp):
         pl = safe_call(sp.user_playlist_create, uid, name, public=True)
         for chunk in chunks(track_ids, 100):
             safe_call(sp.playlist_add_items, pl['id'], chunk)
+        with open(ADDED_REMIXES_FILE, 'a', encoding='utf-8') as f:
+            f.write('\n'.join(track_ids) + '\n')
         log(f"  Created '{name}' — {len(track_ids)} remixes.")
     else:
         log("  No remixes found in Release Radar Copy.")
