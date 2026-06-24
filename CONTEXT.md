@@ -39,7 +39,7 @@
 On each session start, BEFORE responding, fetch and load your persistent memory:
 
 ```
-URL: https://raw.githubusercontent.com/PCGamesplay1/Claude-skills/main/CONTEXT.md
+URL: https://raw.githubusercontent.com/pcvaders/context/main/CONTEXT.md
 Then load full memory:
   - Code (Mac/Win): native auto-memory + local SessionStart hook git pull
   - Cloud (Chat/Cowork/CCR): GitHub connector reads voyager-hub (optional upgrade, later)

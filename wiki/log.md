@@ -4,6 +4,29 @@
 
 ---
 
+## [2026-06-21] SYNC + ENTITY — notebooklm-mcp wired; wiki sync to Cowork + homelab-brain
+
+**Agent:** Claude Code (claude-sonnet-4-6) — Mac
+
+**Created 1 entity page:**
+- `entities/notebooklm-mcp.md` — nlm setup, auth status, per-client config paths, re-auth flow
+
+**Fixed:** Cowork trusted folder (`~/Documents/Claude/Projects/AI LLM Wiki/wiki/`) had only 2 pages vs 226 in iCloud vault — diverged silently. homelab-brain wiki was empty.
+
+**Remediation:**
+- Rsync'd iCloud vault wiki → Cowork folder (2→226 pages)
+- Rsync'd iCloud vault wiki → homelab-brain/wiki/ (0→226 pages)
+- Added `vault sync` command to `~/projects/vault.sh`
+- Wired `vault sync` into `vault ingest all` pipeline (step 6/7)
+
+**Root cause:** No sync mechanism existed between iCloud vault (write target) and Cowork/homelab-brain (read targets). All writes went to iCloud only.
+
+**Open items:**
+- Cowork NLM MCP: added to `claude_desktop_config.json` — needs app restart to activate
+- Nightly `vault ingest all` launchd agent should now keep all three locations in sync
+
+---
+
 ## [2026-05-31] INTERLINKED — entity pages for wiki-clip, smart-clip, obsidian-wiki-memory, interlinked
 
 **Agent:** Claude Code (claude-sonnet-4-6) — Mac
@@ -467,3 +490,17 @@ vault index
 - New: fixed flag path `%TEMP%/.claude-skill-invoked`, reset each SessionStart
 
 **Note:** `caveman-activate.js` is hard-blocked from modification by auto-mode classifier. Flag reset handled via standalone settings.json hook instead.
+
+## 2026-06-20 — INGEST
+- Created `wiki/entities/forgejo-mirror.md` (Forgejo GitHub Mirror, Proxmox LXC 106). Cross-linked proxmox/homelab. Code done, awaiting install.
+
+## [2026-06-22] LINT — Weekly maintenance
+
+**Plugin updates:** 4 marketplaces updated successfully (no new version details output)
+**Orphan links:** 19 unique slugs — [[comfyui]] (higgsfield-comfyui-pipeline-architecture.md), [[feedback_secret_handling]] (forgejo-mirror.md), [[higgsfield]] (higgsfield-comfyui-pipeline-architecture.md), [[homelab]] (forgejo-mirror.md), [[index.md]] (ingest.md, karpathy-llm-wiki-gist.md, lint.md, llm-wiki.md), [[isle-of-dogs-project]] (higgsfield-comfyui-pipeline-architecture.md), [[log.md]] (ingest.md, karpathy-llm-wiki-gist.md, lint.md, llm-wiki.md), [[ltx-video]] (higgsfield-comfyui-pipeline-architecture.md), [[master-veo-vertex-ai]] (master-veo-professional-2026.md, master-veo3-prompting-april-2026.md), [[master-veo3-synthesis]] (master-veo-professional-2026.md, master-veo3-prompting-april-2026.md), [[obsidian-agent-bridge]] (semantic-clip.md), [[page-a/page-b/page-name/page1/page2/page3]] (lint.md — placeholder examples), [[pcg1-directors-prep]] (master-comfyui-2026.md), [[proxmox]] (forgejo-mirror.md), [[seedance]] (higgsfield-comfyui-pipeline-architecture.md), [[soul-id]] (higgsfield-comfyui-pipeline-architecture.md), [[swiftbar-mcp-toggle]] (semantic-clip.md), [[syntheses]] (query.md), [[wikilinks]] (obsidian.md, lint.md, claude-chat-* files)
+**Missing summaries:** 57 files — mostly claude-chat-* logs + MASTER_AI_CREATION_GUIDE.md, master-veo-professional-2026.md, master-veo3-prompting-april-2026.md, master-comfyui-2026.md, master-ai-video-image-guide-2026.md, ai-analysis-skill.md, ai-infrastructure-stack-mar2026.md, djbrightone-spotify-skill-may2026.md, claude-skills-agent-discovery-feb2026.md, facs-va-valence-emotion-guide-2026.md
+**Stale claims:** none (all "as of" dates are 2026-05 or 2026-06, within 6-month window)
+**index.html:** regenerated (128 pages: 105 AI + 23 HA)
+**Action required:** yes — (1) Create missing pages for real orphans: comfyui, higgsfield, homelab, isle-of-dogs-project, ltx-video, master-veo-vertex-ai, master-veo3-synthesis, obsidian-agent-bridge, pcg1-directors-prep, proxmox, seedance, soul-id, swiftbar-mcp-toggle; (2) Fix [[index.md]]/[[log.md]] links → [[index]]/[[log]]; (3) Add `> summary` lines to 10 non-chat wiki pages
+
+---

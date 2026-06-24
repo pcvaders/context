@@ -2,10 +2,27 @@
 
 # NotebookLM MCP
 
-**Package:** `notebooklm-mcp-cli` (PyPI + CLI wrapper)
+**Package:** `notebooklm-mcp-cli` 0.6.10 (PyPI, uv tool)
 **CLI:** `nlm` at `/Users/voyager1/.local/bin/nlm`
 **MCP binary:** `notebooklm-mcp` at `/Users/voyager1/.local/bin/notebooklm-mcp`
-**Auth:** Google account `pcgamesplay1@gmail.com`, 43 cookies, headless Chrome profile
+**Token store:** `~/.notebooklm-mcp-cli/profiles/<profile>/`
+
+## Two accounts (as of 2026-06)
+
+- **pcvaders@gmail.com** = `default` profile. Cowork + Claude Code MCP use this. Primary account (28 notebooks).
+- **pcgamesplay1@gmail.com** = `pcgamesplay1` profile. Owns the memory notebooks.
+
+Memory notebooks owned by pcgamesplay1, **shared to pcvaders as editor**:
+- `38bfb58a-...` "AI Code Style Guide & Skills 2026" — shared ✓
+- `64447237-...` personal wiki — pending share
+
+```bash
+nlm login switch pcvaders        # set active account (CLI + MCP)
+nlm login profile list
+nlm login -p pcgamesplay1 --force # re-auth a profile (Chrome)
+```
+
+**GOTCHA:** `nlm login --clear` often captures only 20-22 cookies (partial → "Authentication expired" on first call). Full session ≈ 43. If auth expires right after login, re-run `nlm login -p <profile> --force` WITHOUT `--clear`.
 
 ## Setup Status (as of 2026-06)
 
