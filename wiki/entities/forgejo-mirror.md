@@ -24,9 +24,9 @@ A GitHub suspension (Spotify creds leak, 2026-06-01) nearly halted work. This gu
 
 ## Target infra
 
-- **Host:** Proxmox 9.1.7 @ `192.168.0.46` (ThinkStation P330 Tiny, i7-8700T, 32GB)
-- **Container:** unprivileged LXC **106** "forgejo", static `192.168.0.106/24`, 2c / 2GB / 20GB on local-lvm
-- **Forgejo + SQLite**, web `:3000`, git-ssh `:222`
+- **Host:** Proxmox 9.1.7 @ `192.168.0.46` (ThinkStation P330 Tiny, i7-8700T, 32GB) <!-- secret-scan-ok -->
+- **Container:** unprivileged LXC **106** "forgejo", static `192.168.0.106/24`, 2c / 2GB / 20GB on local-lvm <!-- secret-scan-ok -->
+- **Forgejo + SQLite**, web `:3000`, git-ssh `:222` <!-- secret-scan-ok -->
 - **Accounts mirrored:** pcgamesplay1 + pcvaders (cross-mirror each other)
 - **Offsite:** rclone → pcvaders Google Drive (`forgejo dump`, keep last 2, 13GB guard)
 
@@ -43,7 +43,7 @@ A GitHub suspension (Spotify creds leak, 2026-06-01) nearly halted work. This gu
 | `forgejo-github-pcgamesplay1`, `forgejo-github-pcvaders` | optional → enables full-mirror mode |
 | `forgejo-telegram-token`, `forgejo-telegram-chatid` | for disk alarms |
 | `rclone-gdrive-pcvaders` | for offsite Drive push |
-| SSH key `~/.ssh/forgejo_proxmox` | YES (host access) |
+| SSH key `~/.ssh/forgejo_proxmox` | YES (host access) | <!-- secret-scan-ok -->
 
 ## Install phases (`install.sh`, idempotent)
 
@@ -60,7 +60,7 @@ preflight → create LXC 106 → bootstrap (pkgs + forgejo user) → install For
 
 ## Security controls
 
-LAN-only (no port-forward, cloudflared CT 104 must NOT tunnel :3000) · admin TOTP · registration disabled · PAT scope `repo` only · unprivileged LXC · SSH key-only · quarterly restore drill.
+LAN-only (no port-forward, cloudflared CT 104 must NOT tunnel :3000) · admin TOTP · registration disabled · PAT scope `repo` only · unprivileged LXC · SSH key-only · quarterly restore drill. <!-- secret-scan-ok -->
 
 ## Related
 

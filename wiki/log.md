@@ -504,3 +504,14 @@ vault index
 **Action required:** yes — (1) Create missing pages for real orphans: comfyui, higgsfield, homelab, isle-of-dogs-project, ltx-video, master-veo-vertex-ai, master-veo3-synthesis, obsidian-agent-bridge, pcg1-directors-prep, proxmox, seedance, soul-id, swiftbar-mcp-toggle; (2) Fix [[index.md]]/[[log.md]] links → [[index]]/[[log]]; (3) Add `> summary` lines to 10 non-chat wiki pages
 
 ---
+
+## [2026-06-29] LINT — Weekly maintenance
+
+**Plugin updates:** 4 marketplaces updated successfully (no new versions announced)
+**Orphan links:** 17 real slugs (excluding lint.md placeholder examples page-a/b/name/page1/2/3 and Wikilinks meta-refs) — [[comfyui]] (higgsfield-comfyui-pipeline-architecture.md), [[feedback_secret_handling]] (forgejo-mirror.md), [[higgsfield]] (higgsfield-comfyui-pipeline-architecture.md), [[homelab]] (forgejo-mirror.md), [[index.md]] (ingest.md, karpathy-llm-wiki-gist.md, lint.md, llm-wiki.md), [[isle-of-dogs-project]] (higgsfield-comfyui-pipeline-architecture.md), [[log.md]] (ingest.md, karpathy-llm-wiki-gist.md, lint.md, llm-wiki.md), [[ltx-video]] (higgsfield-comfyui-pipeline-architecture.md), [[master-veo-vertex-ai]] (master-veo-professional-2026.md, master-veo3-prompting-april-2026.md), [[master-veo3-synthesis]] (master-veo-professional-2026.md, master-veo3-prompting-april-2026.md), [[obsidian-agent-bridge]] (semantic-clip.md), [[pcg1-directors-prep]] (master-comfyui-2026.md), [[proxmox]] (forgejo-mirror.md), [[seedance]] (higgsfield-comfyui-pipeline-architecture.md), [[soul-id]] (higgsfield-comfyui-pipeline-architecture.md), [[swiftbar-mcp-toggle]] (semantic-clip.md), [[syntheses]] (query.md)
+**Missing summaries:** 70 files — 21 non-chat wiki pages: MASTER_AI_CREATION_GUIDE.md, Master AI Creation Guide May 2026.md, ai-analysis-skill.md, ai-infrastructure-stack-mar2026.md, claude-skills-agent-discovery-feb2026.md, cloakbrowser-cloakhq.md, codeburn-getagentseal.md, design-extract-manavarya09.md, djbrightone-spotify-skill-may2026.md, docx-incident-case-study.md, facs-va-valence-emotion-guide-2026.md, forgejo-mirror.md, karpathy-llm-wiki-gist.md, litellm-proxy.md, master-ai-video-image-guide-2026.md, master-comfyui-2026.md, master-veo-professional-2026.md, master-veo3-prompting-april-2026.md, semantic-clip.md, skill-ecosystem.md, skill-selection-guide.md + ~49 claude-chat-* log files
+**Stale claims:** none (all "as of" dates are 2025-12 or newer, within 6-month window)
+**index.html:** regenerated (128 pages: 105 AI + 23 HA)
+**Action required:** yes — (1) Orphan pages unchanged from 2026-06-22 — priority: create comfyui, higgsfield, homelab, proxmox, ltx-video, seedance, soul-id, master-veo-vertex-ai, master-veo3-synthesis, swiftbar-mcp-toggle entity/concept stubs; (2) Fix [[index.md]]/[[log.md]] → [[index]]/[[log]] in ingest.md, karpathy-llm-wiki-gist.md, lint.md, llm-wiki.md; (3) Add `> summary` to 21 non-chat wiki pages
+
+---
