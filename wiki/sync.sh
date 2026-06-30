@@ -14,15 +14,14 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WIKI_DIR="$REPO_ROOT/wiki"
 PERSONAL_DIR="$REPO_ROOT/wiki-personal"
-VAULT_PATH="${1:-$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents}"
+VAULT_PATH="${1:-$HOME/Sync/obsidian-vault}"
 
 # ---------------------------------------------------------------------------
-# Find the vault — adjust VAULT_SUBDIR to match your Obsidian vault name
+# Find the vault — direct Syncthing-managed path (no iCloud subdir needed)
 # ---------------------------------------------------------------------------
-VAULT_SUBDIR="${VAULT_SUBDIR:-Obsidian Vault Icloud/Obsidian Vault AI}"
-WIKI_SRC="$VAULT_PATH/$VAULT_SUBDIR/wiki"
-PERSONAL_SRC="$VAULT_PATH/$VAULT_SUBDIR/wiki-personal"
-VAULT="$VAULT_PATH/$VAULT_SUBDIR"
+WIKI_SRC="$VAULT_PATH/wiki"
+PERSONAL_SRC="$VAULT_PATH/wiki-personal"
+VAULT="$VAULT_PATH"
 
 if [ ! -d "$WIKI_SRC" ]; then
   echo "ERROR: Wiki source not found at: $WIKI_SRC"
