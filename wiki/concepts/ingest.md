@@ -37,6 +37,6 @@ After every ingest:
 
 ## Related
 
-- [[llm-wiki]], [[query]], [[lint]], [[log.md]], [[index.md]]
+- [[llm-wiki]], [[query]], [[lint]], [[log]], [[index]]
 
 (as of 2026-05)

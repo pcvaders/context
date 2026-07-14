@@ -40,9 +40,9 @@ See [[rag]] for full contrast.
 
 ## Indexing Strategy
 
-**[[index.md]]** — content-oriented catalog. One-line summary per page, organised by category. Updated on every ingest. Effective at moderate scale (~100 sources, hundreds of pages) without needing embedding-based RAG.
+**[[index]]** — content-oriented catalog. One-line summary per page, organised by category. Updated on every ingest. Effective at moderate scale (~100 sources, hundreds of pages) without needing embedding-based RAG.
 
-**[[log.md]]** — append-only chronological record. Every operation logged with agent, status, pages touched, next step. The dispatch continuity anchor.
+**[[log]]** — append-only chronological record. Every operation logged with agent, status, pages touched, next step. The dispatch continuity anchor.
 
 ## Use Cases
 

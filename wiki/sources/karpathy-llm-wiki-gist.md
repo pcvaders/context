@@ -27,7 +27,7 @@ Instead of re-deriving knowledge from raw documents on every query (RAG), the LL
 - Knowledge is compiled once and kept current, not re-discovered on every query
 - The LLM owns the wiki layer entirely — humans read it, LLMs write it
 - Three operations drive everything: [[ingest]], [[query]], [[lint]]
-- [[index.md]] and [[log.md]] are the two structural anchors
+- [[index]] and [[log]] are the two structural anchors
 
 ## Scope
 

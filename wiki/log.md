@@ -537,3 +537,13 @@ vault index
 **Action required:** yes — (1) orphan set unchanged for 4 consecutive weekly passes (since 2026-06-22) — recommend creating the 10 stub pages once rather than re-reporting weekly: comfyui, higgsfield, homelab, isle-of-dogs-project, ltx-video, master-veo-vertex-ai, master-veo3-synthesis, obsidian-agent-bridge, pcg1-directors-prep, proxmox, seedance, soul-id; (2) fix [[index.md]]/[[log.md]] → [[index]]/[[log]] link text in ingest.md, llm-wiki.md, karpathy-llm-wiki-gist.md; (3) 63+ claude-chat-* source pages still missing `> summary` — fix ingest template rather than backfill by hand (flagged 3 passes running).
 
 ---
+
+## [2026-07-14] FIX — Orphan cleanup (user-approved)
+
+**Link text fixes:** [[index.md]]→[[index]], [[log.md]]→[[log]] in concepts/ingest.md, concepts/llm-wiki.md, sources/karpathy-llm-wiki-gist.md
+**Stub pages created (12):** concepts/comfyui.md, concepts/higgsfield.md, concepts/ltx-video.md, concepts/seedance.md, concepts/soul-id.md, entities/homelab.md, entities/proxmox.md, entities/isle-of-dogs-project.md, entities/pcg1-directors-prep.md, entities/obsidian-agent-bridge.md, syntheses/master-veo-vertex-ai.md, syntheses/master-veo3-synthesis.md — all `[unsourced]` stubs, flagged for real ingest pass
+**Skipped:** [[feedback_secret_handling]] (entities/forgejo-mirror.md) — not a wiki concept, it's a Claude memory slug; not fabricated
+**index.html:** regenerated (128 pages)
+**Remaining:** 75 files still missing `> summary` (mostly claude-chat-* auto-ingest logs) — deferred, out of scope for this pass (weekly token budget at 97%)
+
+---
