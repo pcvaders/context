@@ -547,3 +547,33 @@ vault index
 **Remaining:** 75 files still missing `> summary` (mostly claude-chat-* auto-ingest logs) — deferred, out of scope for this pass (weekly token budget at 97%)
 
 ---
+
+## 2026-07-14 — Local AI System master overview synthesized
+**Agent:** Claude Code (Fable 5) — Mac
+**Created:** `syntheses/local-ai-system-overview-2026-07.md` — canonical map of the full stack: Obsidian Wiki (CONCEPT), Homelab-Brain hub CT107 + recall :8090, Memorwise CT105 (LIBRARY), Forgejo CT106, The Bridge (recall/clip tools/skills), Agentic OS Phase 3, Preflight Token Agent, Loop Engineering core, infra table, design principles.
+
+## 2026-07-17 — Vault cleanup tasks 2+6 (partial)
+**Agent:** Claude Code (Fable 5) — Mac
+Deleted byte-identical dupe `syntheses/Master AI Creation Guide May 2026.md` (kept `MASTER_AI_CREATION_GUIDE.md`, same MD5) + 3 zero-byte macOS Icon artifacts. Remaining cleanup: handoff/2026-07-15-vault-cleanup.md tasks 1,3,4,5.
+
+## [2026-07-20] LINT — Weekly maintenance
+
+**Plugin updates:** none (4 marketplaces updated, no new plugin versions reported)
+**Orphan links:** 2 — [[feedback_secret_handling]] — referenced in: entities/forgejo-mirror.md; [[swiftbar-mcp-toggle]] — referenced in: entities/semantic-clip.md
+**Missing summaries:** 70 — concepts/skill-ecosystem.md, concepts/ai-analysis-skill.md, entities/forgejo-mirror.md, entities/obsidian-agent-bridge.md, entities/litellm-proxy.md, sources/semantic-clip.md, syntheses/docx-incident-case-study.md, syntheses/local-ai-system-overview-2026-07.md, syntheses/skill-selection-guide.md, syntheses/MASTER_AI_CREATION_GUIDE.md, syntheses/master-veo-professional-2026.md, syntheses/master-veo3-prompting-april-2026.md, syntheses/master-comfyui-2026.md, syntheses/master-ai-video-image-guide-2026.md, syntheses/facs-va-valence-emotion-guide-2026.md, plus 55 sources/claude-chat-*.md ingested pages (see LINT run 2026-07-20 for full list)
+**Stale claims:** none (all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within 6-month window)
+**index.html:** regenerated (128 pages)
+**Action required:** yes — 2 orphan links to fix/create, 70 pages need `> summary` line added (mostly ingested claude-chat sources)
+
+---
+
+## [2026-07-27] LINT — Weekly maintenance
+
+**Plugin updates:** 4 marketplaces updated successfully, no new plugin versions reported
+**Orphan links:** 2 — [[feedback_secret_handling]] — referenced in: entities/forgejo-mirror.md (not a wiki concept, Claude memory slug — skipped per 2026-07-14 decision); [[swiftbar-mcp-toggle]] — referenced in: entities/semantic-clip.md — both unchanged since 2026-06-22, 5 consecutive passes now unaddressed. Also found: [[index.md]]/[[log.md]] literal link text in concepts/lint.md:54 (missed by the 2026-07-14 fix pass, which only touched ingest.md/llm-wiki.md/karpathy-llm-wiki-gist.md)
+**Missing summaries:** 65 (down from 70) — concepts/skill-ecosystem.md, concepts/ai-analysis-skill.md, entities/obsidian-agent-bridge.md, entities/litellm-proxy.md, syntheses/docx-incident-case-study.md, syntheses/local-ai-system-overview-2026-07.md, syntheses/skill-selection-guide.md, syntheses/MASTER_AI_CREATION_GUIDE.md, syntheses/master-veo-professional-2026.md, syntheses/master-veo3-prompting-april-2026.md, syntheses/master-comfyui-2026.md, syntheses/master-ai-video-image-guide-2026.md, syntheses/facs-va-valence-emotion-guide-2026.md, plus 52 sources/claude-chat-*.md ingested pages. Note: entities/forgejo-mirror.md and sources/semantic-clip.md now have summaries (resolved since 2026-07-20).
+**Stale claims:** none (all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within 6-month window of 2026-07-27)
+**index.html:** regenerated (128 pages: 105 AI + 23 HA)
+**Action required:** yes — (1) [[swiftbar-mcp-toggle]] stub still needed, 5 passes running; (2) fix [[index.md]]/[[log.md]] literal text in concepts/lint.md:54; (3) 65 pages still need `> summary` (mostly claude-chat-* auto-ingest — fix ingest template rather than backfill by hand, flagged 4+ passes running)
+
+---

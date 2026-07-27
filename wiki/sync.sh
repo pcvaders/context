@@ -69,7 +69,7 @@ copy_if_exists() {
   mkdir -p "$(dirname "$dst")"
   if [ -f "$src" ]; then
     cp "$src" "$dst"
-    echo "  copied: $(basename "$src") → $(realpath --relative-to="$REPO_ROOT" "$dst")"
+    echo "  copied: $(basename "$src") → ${dst#"$REPO_ROOT"/}"
   else
     echo "  skip (not found): $src"
   fi
