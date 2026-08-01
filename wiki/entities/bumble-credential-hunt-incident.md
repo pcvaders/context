@@ -18,21 +18,15 @@ Bumble's model took the base system prompt ("buzz CLI is your primary interface"
 
 Adding `BUZZ_PRIVATE_KEY` to the agent's env hands a free-tier model the exact signing key the harness is designed to withhold. **The boundary is the safety property.** Leave it intact.
 
-Real fixes:
-1. Move Bumble off the free nemotron model to one that answers in text (as Fizz does).
-2. Restrict the hermes `terminal` / `execute_code` toolset for ACP-mode agents.
+Real fixes (both applied 2026-07-29):
+1. Full identity rotation (Buzz Sign Out) — all 4 nsecs rotated, old keys dead.
+2. Bumble moved to OpenCode + `ollama/gpt-oss:120b-cloud` — nemotron permanently banned.
 
-Bumble stays stopped until both are settled.
+## Resolution (2026-07-29)
 
-## Fallout — unresolved
-
-A `security find-generic-password` diagnostic printed all four nsecs (owner + Fizz + Honey + Bumble) in plaintext into a Claude Code transcript:
-
-`~/.claude/projects/-Users-voyager1-projects-Agency-Agents-AutoSkill-Loop-Engineering/a459ff48-cb89-486b-aa98-b3891b1df0d9.jsonl`
-
-Mode 0600, owner-only, but real. One line contains both the literal string `BUZZ_PRIVATE_KEY` and key material — and Bumble's grep for that exact string was in flight when it was killed, so **whether it ever read that line is unconfirmed**.
-
-Pending decision: **scrub vs rotate.** Scrubbing the jsonl is only safe once the owning session exits. Rotating means Buzz "Sign Out", which is destructive — wipes local identity and all app data, breaks every agent's `auth_tag`, full re-onboard. There is no in-app rotate-in-place flow.
+- **Rotation done:** Buzz Sign Out wiped all agent data + pubkeys. All 4 agents rebuilt on new identities.
+- **Transcript scrubbed:** `a459ff48...jsonl` had 4 leaked nsecs — all replaced with `[REDACTED]` after session exit. Keys were already dead by the time of scrub.
+- **All agents verified responsive** post-rotation: Fizz ✓, Honey ✓, Bumble ✓ (OpenCode, no nemotron), Claude ✓.
 
 ## Lessons
 
