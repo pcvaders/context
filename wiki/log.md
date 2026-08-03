@@ -4,6 +4,17 @@
 
 ---
 
+## [2026-08-03] LINT — Weekly maintenance
+
+**Plugin updates:** ran `claude plugins marketplace update` — 4 marketplaces updated, no new versions reported
+**Orphan links:** 3 — [[agent-privilege-separation]] (entities/bumble-credential-hunt-incident.md:37), [[swiftbar-mcp-toggle]] (entities/semantic-clip.md:11), [[feedback_secret_handling]] (entities/forgejo-mirror.md:67, points to a memory slug, not a wiki page)
+**Missing summaries:** 84 — mostly `sources/claude-chat-*.md` raw chat exports plus `syntheses/master-*` guides and several `concepts/`/`entities/` pages (mcp.md, skill-ecosystem.md, agent-native-cli.md, ai-analysis-skill.md, smart-connections.md, forgejo-mirror.md, buzz-agent-harness-config.md, pinecone.md, renderzero-vertex-patch.md, obsidian-agent-bridge.md, litellm-proxy.md, bumble-credential-hunt-incident.md, and full sources/ list — see run output)
+**Stale claims:** none — all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within the 6-month window
+**index.html:** regenerated (142 pages — 119 AI + 23 HA)
+**Action required:** yes — 84 missing summaries is high; also noticed `syntheses/Master AI Creation Guide May 2026.md` has spaces in filename (violates no-spaces convention, duplicate of `MASTER_AI_CREATION_GUIDE.md`/`master-ai-video-image-guide-2026.md` — likely a stray duplicate worth removing)
+
+---
+
 ## [2026-06-21] SYNC + ENTITY — notebooklm-mcp wired; wiki sync to Cowork + homelab-brain
 
 **Agent:** Claude Code (claude-sonnet-4-6) — Mac
