@@ -4,6 +4,17 @@
 
 ---
 
+## [2026-08-10] LINT — Weekly maintenance
+
+**Plugin updates:** ran `claude plugins marketplace update` — 4 marketplaces (claude-plugins-official, caveman, karpathy-skills, antigravity-awesome-skills) updated, CLI reports success but no per-marketplace version diff
+**Orphan links:** 5 — [[agent-privilege-separation]] (entities/bumble-credential-hunt-incident.md:37), [[swiftbar-mcp-toggle]] (entities/semantic-clip.md:11), [[feedback_secret_handling]] (entities/forgejo-mirror.md:67, points to a memory slug not a wiki page), [[caveman-julius-brussee]] (concepts/ai-cost-observability.md:31, entities/julius-brussee.md:11,27 — page doesn't exist, only `sources/caveman-julius-brussee.md` and `entities/julius-brussee.md`), [[codeburn-getagentseal]] (concepts/ai-cost-observability.md:30,55 — page doesn't exist, only `sources/codeburn-getagentseal.md`) — same 3 carried over from 2026-08-03 plus 2 newly caught (link/slug mismatch between sources/ and concepts/ naming)
+**Missing summaries:** 73 — down from 84 on 2026-08-03. Still mostly `sources/claude-chat-*.md` raw chat exports (54 files) plus `syntheses/master-*`/`MASTER_*` guides (7), and several `concepts/`/`entities/` pages (ai-analysis-skill.md, skill-ecosystem.md, bumble-credential-hunt-incident.md, buzz-agent-harness-config.md, forgejo-mirror.md, litellm-proxy.md, obsidian-agent-bridge.md)
+**Stale claims:** none — all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within the 6-month window
+**index.html:** regenerated (142 pages — 119 AI + 23 HA)
+**Action required:** yes — orphan links growing (3→5), two are slug-naming mismatches (`sources/codeburn-getagentseal.md` exists but nothing under that exact concepts-side slug, same for caveman-julius-brussee) — likely just needs the source pages copied/symlinked into entities/ or the links repointed to existing `sources/` slugs. 73 missing summaries still high, no progress this week beyond the 11 that dropped off. `syntheses/Master AI Creation Guide May 2026.md` (spaces in filename) still present, still unresolved duplicate flagged last week.
+
+---
+
 ## [2026-08-03] LINT — Weekly maintenance
 
 **Plugin updates:** ran `claude plugins marketplace update` — 4 marketplaces updated, no new versions reported
