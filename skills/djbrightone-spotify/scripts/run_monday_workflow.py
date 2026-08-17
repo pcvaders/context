@@ -271,14 +271,29 @@ def genre_releases(sp, genre_name, ref_playlist_ids, folder_tag):
         time.sleep(0.25)
 
     if new_tracks:
-        track_ids = [t['id'] for t in new_tracks if t.get('id')]
-        uid = safe_call(sp.current_user)['id']
-        name = today.strftime(f"%Y-%m-%d {genre_name}")
-        pl = safe_call(sp.user_playlist_create, uid, name, public=False)
-        for chunk in chunks(track_ids, 100):
-            safe_call(sp.playlist_add_items, pl['id'], chunk)
-        os.makedirs(today.strftime(f"%Y-%m-%d_{folder_tag}"), exist_ok=True)
-        log(f"  Created '{name}' — {len(track_ids)} tracks.")
+        seen_file = f"added_{folder_tag.lower()}.txt"
+        previously_added = set()
+        if os.path.exists(seen_file):
+            with open(seen_file, 'r', encoding='utf-8') as f:
+                previously_added = {l.strip() for l in f if l.strip()}
+
+        # dedupe within-run and cross-week
+        track_ids = list(dict.fromkeys(
+            t['id'] for t in new_tracks if t.get('id') and t['id'] not in previously_added
+        ))
+
+        if track_ids:
+            uid = safe_call(sp.current_user)['id']
+            name = today.strftime(f"%Y-%m-%d {genre_name}")
+            pl = safe_call(sp.user_playlist_create, uid, name, public=False)
+            for chunk in chunks(track_ids, 100):
+                safe_call(sp.playlist_add_items, pl['id'], chunk)
+            with open(seen_file, 'a', encoding='utf-8') as f:
+                f.write('\n'.join(track_ids) + '\n')
+            os.makedirs(today.strftime(f"%Y-%m-%d_{folder_tag}"), exist_ok=True)
+            log(f"  Created '{name}' — {len(track_ids)} tracks.")
+        else:
+            log(f"  No new {genre_name} releases found (all deduped).")
     else:
         log(f"  No new {genre_name} releases found.")
 
