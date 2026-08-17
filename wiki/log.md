@@ -4,6 +4,18 @@
 
 ---
 
+## [2026-08-17] LINT — Weekly maintenance
+
+**Plugin updates:** 4 marketplaces updated successfully, no new plugin versions reported
+**Orphan links:** 4 real — [[agent-privilege-separation]] — referenced in: entities/bumble-credential-hunt-incident.md:37 (new, no stub exists); [[feedback_secret_handling]] — referenced in: entities/forgejo-mirror.md:67 (not a wiki concept, Claude memory slug — skipped per 2026-07-14 decision); [[index.md]]/[[log.md]] literal link text (should be [[index]]/[[log]]) — concepts/lint.md:54, still unfixed since flagged 2026-07-27; [[swiftbar-mcp-toggle]] — referenced in: entities/semantic-clip.md:11, unaddressed since 2026-06-22 (6 consecutive passes now — SwiftBar plugins were deleted 2026-05-28 per memory, so this is a permanent dangling reference, not a pending feature). Also noted: 9 `[[wikilinks]]`/`[[Wikilinks]]` references inside sources/claude-chat-setup-walkthrough.md and sources/claude-chat-mcp-usage-control-and-disable-option.md — these are literal text inside immutable ingested source transcripts, not intended as real wikilinks, so left as-is. concepts/lint.md's [[page-a]], [[page-b]], [[page1-3]], [[page-name]], [[wikilinks]], [[syntheses]] are illustrative examples inside the lint documentation itself — false positives, not real orphans.
+**Missing summaries:** 74 (up from 65 on 2026-07-27) — growth driven by ~40 new sources/claude-chat-*.md auto-ingested pages plus new entity pages (bumble-credential-hunt-incident.md, buzz-agent-harness-config.md, renderzero-vertex-patch.md) and syntheses pages (docx-incident-case-study.md, facs-va-valence-emotion-guide-2026.md, master-*-2026.md, skill-selection-guide.md) added since the last lint pass. Full list in this run's raw output — same root cause flagged 3+ passes running: fix the ingest template to always emit `> summary`, rather than backfilling by hand.
+**Stale claims:** none — all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within 6-month window of 2026-08-17
+**Duplicate file found:** `syntheses/Master AI Creation Guide May 2026.md` is byte-identical (MD5 78343b27...) to `syntheses/MASTER_AI_CREATION_GUIDE.md` — this exact dupe was deleted 2026-07-17 but has reappeared, likely re-synced from another host (iCloud mirror at `~/Library/.../Obsidian Vault AI/` still shows a diverging log.md, suggesting two vault copies are not fully unified). Flagged, not deleted — needs human decision on which sync path is canonical.
+**index.html:** regenerated (142 pages: 119 AI + 23 HA)
+**Action required:** yes — (1) create stub for [[agent-privilege-separation]] or confirm intent; (2) fix [[index.md]]/[[log.md]] literal text in concepts/lint.md:54 (missed by 2026-07-14 fix pass, flagged again 2026-07-27, still open); (3) decide fate of [[swiftbar-mcp-toggle]] reference — remove or stub, SwiftBar is gone; (4) 74 pages need `> summary` — fix ingest template; (5) resolve reappeared duplicate `Master AI Creation Guide May 2026.md` vs `MASTER_AI_CREATION_GUIDE.md` and reconcile the two vault copies (Sync path vs iCloud path) so files/log don't diverge again.
+
+---
+
 ## [2026-08-10] LINT — Weekly maintenance
 
 **Plugin updates:** ran `claude plugins marketplace update` — 4 marketplaces (claude-plugins-official, caveman, karpathy-skills, antigravity-awesome-skills) updated, CLI reports success but no per-marketplace version diff
