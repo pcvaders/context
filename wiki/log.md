@@ -16,6 +16,18 @@
 
 ---
 
+## [2026-08-24] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated successfully (claude-plugins-official, caveman, karpathy-skills, antigravity-awesome-skills, agentmemory), no new plugin versions surfaced in output
+**Orphan links:** 3 real — [[agent-privilege-separation]] — referenced in: entities/bumble-credential-hunt-incident.md (still no stub, open since 2026-08-17); [[feedback_secret_handling]] — referenced in: entities/forgejo-mirror.md (Claude memory slug, not a wiki concept — skipped per 2026-07-14 decision); [[swiftbar-mcp-toggle]] — referenced in: entities/semantic-clip.md (SwiftBar deleted 2026-05-28, permanent dangling reference, unaddressed since 2026-06-22, now 7 consecutive passes). Note: [[index.md]]/[[log.md]] literal-text issue in concepts/lint.md flagged 2026-07-27/2026-08-17 no longer detected this pass — appears fixed or file changed. concepts/lint.md's [[page-a]]/[[page-b]]/[[page1-3]]/[[page-name]]/[[wikilinks]]/[[syntheses]] remain illustrative examples, not real orphans; `[[wikilinks]]`/`[[Wikilinks]]` inside claude-chat-*.md source transcripts remain literal text, not real links.
+**Missing summaries:** 50 (down from 74 on 2026-08-17) — mostly sources/claude-chat-*.md auto-ingested pages plus entities/bumble-credential-hunt-incident.md and entities/buzz-agent-harness-config.md. Root cause unchanged from prior passes: ingest template should emit `> summary` by default rather than relying on backfill.
+**Stale claims:** none — all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within 6-month window of 2026-08-24
+**Duplicate file still present:** `syntheses/Master AI Creation Guide May 2026.md` remains byte-identical (MD5 78343b27...) to `syntheses/MASTER_AI_CREATION_GUIDE.md`, same as flagged 2026-08-17 and 2026-07-17 — still unresolved, needs human decision on canonical sync path.
+**index.html:** regenerated (142 pages: 119 AI + 23 HA)
+**Action required:** yes — (1) create stub for [[agent-privilege-separation]] or confirm intent; (2) decide fate of [[swiftbar-mcp-toggle]] reference; (3) 50 pages need `> summary` — fix ingest template rather than hand-backfill; (4) resolve reappeared duplicate `Master AI Creation Guide May 2026.md` vs `MASTER_AI_CREATION_GUIDE.md`, unresolved for 3 consecutive passes now.
+
+---
+
 ## [2026-08-10] LINT — Weekly maintenance
 
 **Plugin updates:** ran `claude plugins marketplace update` — 4 marketplaces (claude-plugins-official, caveman, karpathy-skills, antigravity-awesome-skills) updated, CLI reports success but no per-marketplace version diff
