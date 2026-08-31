@@ -4,6 +4,18 @@
 
 ---
 
+## [2026-08-31] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated successfully, no new plugin versions reported
+**Orphan links:** 4 real, all unaddressed since prior passes — [[agent-privilege-separation]] (entities/bumble-credential-hunt-incident.md:37, no stub, flagged since 2026-08-17); [[feedback_secret_handling]] (entities/forgejo-mirror.md:67, Claude memory slug not a wiki concept — skip per 2026-07-14 decision); [[index.md]]/[[log.md]] literal link text should be [[index]]/[[log]] (concepts/lint.md:54, unfixed since 2026-07-27, 3rd consecutive flag); [[swiftbar-mcp-toggle]] (entities/semantic-clip.md:11, dangling since SwiftBar deletion 2026-05-28, 7th consecutive pass unaddressed). Also: `[[wikilinks]]`/`[[Wikilinks]]`/`[[page-a..3]]`/`[[page-name]]`/`[[syntheses]]`/`[[index]]`/`[[log]]` hits inside concepts/lint.md, concepts/ingest.md, concepts/llm-wiki.md, concepts/query.md, sources/claude-chat-setup-walkthrough.md, sources/claude-chat-mcp-usage-control-and-disable-option.md, sources/karpathy-llm-wiki-gist.md — literal example/documentation text or immutable transcript content, not real orphans.
+**Missing summaries:** 73 (down 1 from 74 on 2026-08-17) — still same root cause: ~40 sources/claude-chat-*.md ingested pages plus entity/synthesis pages lack `> summary` line. Fix at ingest-template level, not by hand.
+**Stale claims:** none — no `(as of YYYY-MM)` tag older than 2026-03 found
+**Duplicate file still present:** `syntheses/Master AI Creation Guide May 2026.md` remains byte-identical (MD5 78343b27...) to `syntheses/MASTER_AI_CREATION_GUIDE.md`, unresolved since flagged 2026-08-17 (and originally 2026-07-17).
+**index.html:** regenerated (142 pages)
+**Action required:** yes — same 5 open items as 2026-08-17: (1) stub/confirm [[agent-privilege-separation]]; (2) fix literal [[index.md]]/[[log.md]] text in concepts/lint.md:54; (3) resolve [[swiftbar-mcp-toggle]] dangling ref; (4) fix ingest template so new pages emit `> summary` (73 pages missing); (5) reconcile duplicate `Master AI Creation Guide May 2026.md` vs `MASTER_AI_CREATION_GUIDE.md` across the two vault sync paths.
+
+---
+
 ## [2026-08-17] LINT — Weekly maintenance
 
 **Plugin updates:** 4 marketplaces updated successfully, no new plugin versions reported
