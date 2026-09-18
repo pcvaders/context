@@ -24,8 +24,8 @@ A GitHub suspension (Spotify creds leak, 2026-06-01) nearly halted work. This gu
 
 ## Target infra
 
-- **Host:** Proxmox 9.1.7 @ `192.168.0.46` (ThinkStation P330 Tiny, i7-8700T, 32GB) <!-- secret-scan-ok -->
-- **Container:** unprivileged LXC **106** "forgejo", static `192.168.0.106/24`, 2c / 2GB / 20GB on local-lvm <!-- secret-scan-ok -->
+- **Host:** Proxmox 9.1.7 @ `<lan-ip>` (ThinkStation P330 Tiny, i7-8700T, 32GB) <!-- secret-scan-ok -->
+- **Container:** unprivileged LXC **106** "forgejo", static `<lan-ip>/24`, 2c / 2GB / 20GB on local-lvm <!-- secret-scan-ok -->
 - **Forgejo + SQLite**, web `:3000`, git-ssh `:222` <!-- secret-scan-ok -->
 - **Accounts mirrored:** pcgamesplay1 + pcvaders (cross-mirror each other)
 - **Offsite:** rclone → pcvaders Google Drive (`forgejo dump`, keep last 2, 13GB guard)
@@ -61,6 +61,21 @@ preflight → create LXC 106 → bootstrap (pkgs + forgejo user) → install For
 ## Security controls
 
 LAN-only (no port-forward, cloudflared CT 104 must NOT tunnel :3000) · admin TOTP · registration disabled · PAT scope `repo` only · unprivileged LXC · SSH key-only · quarterly restore drill. <!-- secret-scan-ok -->
+
+## Client setup (per machine)
+
+Credentials are **per machine** — macOS Keychain entries do not travel. Every new client is provisioned on its own. Runbook Sections 9-10 in `~/projects/forgejo-mirror/README.md`.
+
+**Pick the account before touching credentials.** Agents authenticate as `agentuser` over HTTP + a per-machine token (no SSH key — the agent-setup runbook excludes SSH from that account). Only a machine where *voyager1* personally pushes gets an SSH key. <!-- secret-scan-ok -->
+
+- **Mac** — voyager1 SSH key registered; pushes `<lan-ssh-remote>`. <!-- secret-scan-ok -->
+- **Windows (win11-cl)** — provisioned 2026-09-11 after this recurred: the runbook had been Mac-only, so every attempt from the PC restarted from scratch.
+
+Verify a registered key from anywhere, no auth needed: `curl http://<lan-ip>:3000/<user>.keys`.
+
+Org naming misleads — **`personal` is not personal content**; it holds the `~/projects` monorepo. Actually-private repos are `voyager1/Personal-Skills` and `personal/reachy_mini_radio_open`. Unauthenticated requests 404 across the board.
+
+**Open finding (2026-09-11):** `/Users/agentuser/projects/.git/config` is mode 644 with a write-capable token in the remote URL. `chmod 600`, and move the credential into a helper. Token scopes are per-capability, not per-repo — the per-project limit comes from team grants, so adding a grant silently widens every existing token.
 
 ## Related
 

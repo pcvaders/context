@@ -57,6 +57,9 @@ Gemini provider `getApiKey()` throws and `checkApiKey()` is false when no key st
 Mac: kill app → swap `app.asar` → set header hash in Info.plist → `xattr -cr` → `codesign -s - --deep --force` → verify.
 **Windows:** kill app → swap `resources\app.asar` → no codesign step (unless the build is signed; ad-hoc re-sign not available the same way) → relaunch. If the app refuses to load (integrity), the manifest hash must be updated for the Win build.
 
+## Windows status check (2026-08-23)
+Found on Win11: **RenderZero Animate's `settings.json` was missing the entire `comfyUi` provider block** that Studio ships (baseUrl, auth, Flux/WAN 2.2 profiles) — only had `recentProjects`. Fixed by grafting Studio's block into Animate's config (skipping Studio's `costLedger`). Separately, **the Vertex patch above does not appear applied to the currently-installed Win11 binaries** — both Studio's and Animate's bundled Gemini provider are still hardcoded API-key-only, no live Vertex branch found. Porting checklist below is documented but unverified as executed on this machine. **Status: open** — config gap fixed, Vertex patch application still pending/unconfirmed. <!-- secret-scan-ok -->
+
 ## Porting checklist (Mac → Win 11)
 1. Install Google Cloud SDK for Windows; confirm `gcloud auth print-access-token` works.
 2. Run the ADC login commands above; set env vars at OS level.

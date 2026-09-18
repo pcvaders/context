@@ -1,6 +1,24 @@
-# Operation Log
+<!-- llm-wiki-log-header-start -->
+# Wiki Operation Log
 
+Every ingest, lint run, and maintenance operation is recorded here automatically. For a better experience, use the **Operation History** panel:
+- Cmd+P → "View operation history"
+- Or open from Settings → Auto Maintenance → Operation History
+
+---
 > Append-only record of all wiki operations. Date-stamped and categorized by type.
+
+---
+
+## [2026-09-07] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated successfully, no new plugin versions reported
+**Orphan links:** 4 real, all unaddressed since prior passes — [[agent-privilege-separation]] (entities/bumble-credential-hunt-incident.md:37, no stub, flagged since 2026-08-17, 3rd consecutive pass); [[feedback_secret_handling]] (entities/forgejo-mirror.md:67, Claude memory slug not a wiki concept — skip per 2026-07-14 decision); [[Windows 11]] link text (entities/comfyui-pinokio-blackwell.md:26, entities/claude-code-skill-enforcer-windows-bug.md:19) resolves to nothing in scope — actual page is pinokio/Windows 11/windows-11.md (slug `windows-11`), so these should be `[[windows-11|Windows 11]]`; [[swiftbar-mcp-toggle]] (entities/semantic-clip.md:11, dangling since SwiftBar deletion 2026-05-28, 8th consecutive pass unaddressed). Also: `[[wikilinks]]`/`[[Wikilinks]]`/`[[page-a..3]]`/`[[page-name]]`/`[[syntheses]]`/`[[index]]`/`[[log]]`/`[[index.md]]`/`[[log.md]]` hits inside concepts/lint.md, concepts/ingest.md, concepts/llm-wiki.md, concepts/query.md, sources/claude-chat-setup-walkthrough.md, sources/claude-chat-mcp-usage-control-and-disable-option.md, sources/karpathy-llm-wiki-gist.md — literal example/documentation text or immutable transcript content, not real orphans.
+**Missing summaries:** 73 (unchanged from 2026-08-31) — still same root cause: ~55 sources/claude-chat-*.md ingested pages plus entity/synthesis pages lack `> summary` line. Fix at ingest-template level, not by hand. Full file list in this run's raw output.
+**Stale claims:** none — no `(as of YYYY-MM)` tag older than 2026-03 found (all 2026-05 through 2026-09)
+**Duplicate file still present:** `syntheses/Master AI Creation Guide May 2026.md` remains byte-identical (MD5 78343b27...) to `syntheses/MASTER_AI_CREATION_GUIDE.md`, unresolved since flagged 2026-07-17 (3rd re-flag).
+**index.html:** regenerated (159 pages: 136 AI + 23 HA)
+**Action required:** yes — same 5 open items as 2026-08-31, plus new item (3): (1) stub/confirm [[agent-privilege-separation]]; (2) fix literal [[index.md]]/[[log.md]] text in concepts/lint.md:54; (3) fix [[Windows 11]] link text in entities/comfyui-pinokio-blackwell.md:26 and entities/claude-code-skill-enforcer-windows-bug.md:19 to point at `windows-11`; (4) resolve [[swiftbar-mcp-toggle]] dangling ref; (5) fix ingest template so new pages emit `> summary` (73 pages missing); (6) reconcile duplicate `Master AI Creation Guide May 2026.md` vs `MASTER_AI_CREATION_GUIDE.md` across the two vault sync paths.
 
 ---
 
@@ -633,5 +651,267 @@ Deleted byte-identical dupe `syntheses/Master AI Creation Guide May 2026.md` (ke
 **Stale claims:** none (all `(as of YYYY-MM)` tags are 2026-05 or 2026-06, within 6-month window of 2026-07-27)
 **index.html:** regenerated (128 pages: 105 AI + 23 HA)
 **Action required:** yes — (1) [[swiftbar-mcp-toggle]] stub still needed, 5 passes running; (2) fix [[index.md]]/[[log.md]] literal text in concepts/lint.md:54; (3) 65 pages still need `> summary` (mostly claude-chat-* auto-ingest — fix ingest template rather than backfill by hand, flagged 4+ passes running)
+
+---
+
+## [2026-09-02] INGEST — Win11 session backfill (first-ever Win11 wiki entry)
+**Agent:** Claude Code (Sonnet 5) — Win11
+
+**Root cause found first:** Win11 sessions were never reaching this wiki. `CLAUDE.md` and `/aillmwiki` (`aillmwiki.md`) both pointed at the iCloud copy (`aillmwiki.md` even still had a dead pre-move Mac path). Real sync target is Syncthing folder `C:\Users\PCG1\AppData\Local\Programs\Syncthing\AI Obsidian Vault` (confirmed via Syncthing config/REST API), ~2 months ahead of the iCloud copy. Fixed both pointer files — see `incidents/2026-09-02-vault-syncthing-icloud-drift.md`.
+
+**Backfilled this session's work:**
+- `entities/comfyui-pinokio-blackwell.md` (new) — Pinokio ComfyUI original vs. updated clone (py3.12.9, torch/vision/audio 2.9.1+cu130, SageAttention 2.2.0, flash_attn 2.8.3), verified via real SDXL generation
+- `incidents/2026-09-02-torchaudio-abi-version-pin.md` (new) — pip auto-resolve torchaudio ABI mismatch, WinError 127, caught only by real boot not import check
+- `incidents/2026-09-02-vault-syncthing-icloud-drift.md` (new) — this fix, written up in full
+- `pinokio/pinokio.md` (deepened) — noted primary usage moved to `H:\Pinokio\`, `C:\pinokio\` status unverified, linked new ComfyUI entity
+- `index.md` — added Incidents section (didn't exist before), added comfyui-pinokio-blackwell to Entities
+
+**Known gap surfaced, not yet fixed:** `index.md` is stale relative to `index.html`/`log.md` (dates back to 2026-05-26, manually maintained, drifted from the auto-generated index). Full backlog of un-ingested Win11 session history (ComfyUI/Pinokio model-audit work, Blender clay-pass pipeline, Windows Defender crash-loop root cause, BIOS 6/24-core issue, NotebookLM auth workaround, Cold Storage Ledger audit) still outstanding — user requested a plan to work through it, to follow.
+
+## [2026-09-02] FIX — generate_wiki_index.py vault-resolution + SECTIONS gap
+**Agent:** Claude Code (Sonnet 5) — Win11
+
+Found while backfilling: the generator's own VAULT resolution checked `iCloudDrive` before falling back to its own script directory, so every run from inside the real Syncthing-synced vault was silently writing `index.html` into the **stale iCloud copy** instead — confirmed by iCloud's `index.html` mtime advancing on each run while the real vault's stayed frozen at Sep 1. Fixed resolution order: Syncthing path checked first explicitly, script-dir (cwd) second, iCloud demoted to last-resort only. Also added `incidents` to `SECTIONS` (was invisible to the index entirely — page count correctly jumped 119→125 AI pages after the fix, confirming pages were always there, just never scanned). `pinokio/` still excluded — has a nested `Windows 11/` subfolder the current `glob("*.md")` won't recurse into; needs `glob("**/*.md")` + a slug fix in `parse_page` first.
+
+Related: incidents/2026-09-02-vault-syncthing-icloud-drift.md
+
+## [2026-09-02] FIX — pinokio/ nested subfolder now indexed
+**Agent:** Claude Code (Sonnet 5) — Win11
+
+`parse_page` now takes `section_dir` and computes a relative slug (`path.relative_to(section_dir)`) instead of bare `path.stem`, and both AI/HA loops switched `glob("*.md")` → `rglob("*.md")`. Added `pinokio` to `SECTIONS`. Page count 125→129 (the 4 `pinokio/` pages, including 3 previously-invisible ones under `Windows 11/`, now indexed). Closes the gap flagged in the previous log entry.
+
+## [2026-09-03] CLARIFY — two separate wikis confirmed, not to be merged
+**Agent:** Claude Code (Sonnet 5) — Win11
+
+User confirmed `C:\Users\PCG1\homelab_brain\wiki\` and this vault (`AppData\...\Syncthing\AI Obsidian Vault`) are two deliberately separate knowledge bases, not drift to reconcile. This vault (AppData path) is confirmed as THE AI LLM Wiki — CLAUDE.md/aillmwiki.md pointers stay as fixed 2026-09-02. `homelab_brain\wiki` is a separate, active Homelab-Brain infrastructure knowledge base (CT107 hub, recall, etc.) — same folder schema, unrelated content, do not write into it from `/aillmwiki`. Documented in CLAUDE.md under "Do not confuse with". Supersedes the "two active Syncthing shares diverged" framing in the 2026-09-02 vault-drift incident page — that page's core finding (iCloud copy stale, fixed pointer to Syncthing) still stands; only the homelab_brain comparison was a false alarm.
+
+## [2026-09-03] INGEST — Phase 3 backfill: confirmed punch-list items from prior Win11 sessions
+**Agent:** Claude Code (Sonnet 5) — Win11
+
+Backfilled 6 new pages + 1 deepened page, from a transcript-mining pass across other Win11 Claude Code project folders (not this session's own project):
+
+**Closed:**
+- `incidents/2026-07-11-wsus-dead-placeholder-blocks-fod-install.md` — fake WSUS policy blocked OpenSSH.Server FoD install; same root cause believed to underlie a previously-noted (not separately documented) Defender crash-loop
+- `entities/amuseai-vertex-integration.md` — AmuseAI → Vertex AI reroute for Gemini/Imagen/Veo, working
+- `entities/cutmaster-ai-davinci-tools.md` — DaVinci Tools dashboard, verified E2E, ffmpeg PATH gap noted
+
+**Open (flagged for user attention, not just filed):**
+- `incidents/2026-09-01-buzz-nsec-identity-unrecoverable.md` — possible personal Nostr key loss, real not just config
+- `incidents/2026-08-24-architect-studio-overseer-fake-completion.md` — silent fake-success bug + LAN-exposed CORS gap
+- `entities/claude-code-skill-enforcer-windows-bug.md` — Windows hook PID-mismatch, fix identified not applied
+- `entities/cutmaster-ai-git-hosting.md` — Codeberg move after GitHub suspension, Win11 push auth unresolved
+- `entities/renderzero-vertex-patch.md` (deepened) — Win11 Animate config gap fixed, Vertex patch application unverified
+
+`index.md` updated (Entities + Incidents tables). Corrected an earlier over-attribution: this pass initially cited a non-existent `[[windows-defender-crash-loop]]` page and a wrong `[[2026-09-02-torchaudio-abi-version-pin]]` cross-link on the WSUS incident before writing it — caught before publish, rewritten to describe the Defender link as unconfirmed/undocumented rather than assert a page that doesn't exist (Karpathy rule 4: don't fabricate).
+
+Remaining backlog not yet ingested (lower priority / needs more source digging, not attempted this pass): NotebookLM auth workaround, Cold Storage Ledger artifact, ComfyUI model-audit/dedup findings, Blender clay-pass pipeline, KensingtonKonductor-TB.exe crash-loop — all confirmed as this-session-only per the prior punch-list research, not yet written up as their own wiki pages.
+
+## [2026-09-14] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated (no per-plugin version diffs reported by CLI)
+**Orphan links:** 7 — [[2026-09-02-torchaudio-abi-version-pin]] (in entities/comfyui-pinokio-blackwell.md), [[Windows 11]] (in entities/comfyui-pinokio-blackwell.md, entities/claude-code-skill-enforcer-windows-bug.md), [[agent-privilege-separation]] (in entities/bumble-credential-hunt-incident.md), [[feedback_secret_handling]] (in entities/forgejo-mirror.md), [[pinokio]] (in entities/comfyui-pinokio-blackwell.md — page exists at wiki/pinokio/ but outside concepts/entities/sources/syntheses scope), [[swiftbar-mcp-toggle]] (in entities/semantic-clip.md), [[syntheses]] (in concepts/query.md — links a folder, not a page)
+**Missing summaries:** 73 — concentrated in sources/ (claude-chat-* ingest template omits `> summary`, same known issue since 2026-08-31) and syntheses/ master guides; full list held in session output, not repeated here
+**Stale claims:** none (all `(as of YYYY-MM)` tags are 2026-05/06/09, within 6 months of 2026-09-14)
+**index.html:** regenerated (159 pages: 136 AI + 23 HA)
+**Action required:** yes — 7 orphan links need either a stub page or removal; 73 missing summaries trace to the sources/ ingest template not writing `> summary` (fix the template, don't hand-patch each file)
+
+---
+
+## [2026-09-18] P1 CLOSED (partial) — account-level memory vault path corrected
+
+Ref: `handoff/2026-09-17-memory-maintenance.md`, P1.
+
+**Fixed:** Claude's account-level memory file `/areas/github-wiki-memory.md` now names
+`~/Sync/obsidian-vault` (Syncthing, hub CT107, recall :8090) as the live vault path, with the
+iCloud path retained and labelled superseded. Verified by re-reading the account-level file on
+2026-09-18 12:28 UTC; three new `[stated]` lines present, prior lines intact.
+
+**Route:** the write had to be made from a plain claude.ai chat with no project selected.
+Project-bound sessions (Cowork, Claude Code) can only write inside their own
+`/projects/<id>/` memory subtree, which is why the original correction ended up stranded in the
+Southern Water subtree (`/projects/01a0aadc-c243-70f1-b465-5a00045602cc/areas/github-wiki-memory.md`).
+
+**Residual — not yet fixed.** Two older lines in the same file still name iCloud as the vault
+location and now contradict the correction directly:
+- "Three-part memory architecture: ... and Obsidian vault on iCloud"
+- "AILLM wiki migrated from Google Drive to iCloud; Drive searches return only stale pre-migration files"
+A reader hitting either line before the new ones still gets the dead path. Needs a second
+account-level edit.
+
+**Stale copy still present:** the Southern Water subtree copy above. Deletable only from a
+session bound to that project. Harmless now that the account-level file is right.
+
+**New instance of the handoff's root-cause pattern, logged as occurrence 5.** The first attempt at
+this fix was pasted into a Claude Code session, which searched the local filesystem for `/areas/`,
+found nothing, and returned a correction block in the wrong format (`##` headed sections rather
+than `[stated]` bullets). Pasting it would have created a fourth copy of the correction rather
+than fixing the file. Same class as occurrences 1–4: right information, wrong location, no check
+that the consumer can see it. Reinforces the handoff's proposed standing check that every pointer
+resolves to the Syncthing path.
+
+---
+
+## [2026-09-18] P2 CLOSED — index.md is now a generated artefact, and index.html was also undercounting
+
+Ref: `handoff/2026-09-17-memory-maintenance.md`, P2.
+
+**The stated problem:** `wiki/index.md` was hand-maintained and listed 49 pages against a real total
+of 159 — anything treating it as the index saw under a third of the wiki.
+
+**A second bug found while fixing it, not in the handoff.** `index.html` was wrong too. The
+generator's `SECTIONS` list includes `incidents` and `pinokio`, so their pages were parsed and
+counted in the "159 pages" header — but `render_template()` only emitted card sections for
+`concept`, `entity`, `source` and `synthesis`. The other 12 pages (8 incidents + 4 pinokio) were
+silently dropped. Verified before the fix: header claimed 159, DOM contained 147 cards. So the
+handoff's premise that "`index.html` has 159" was true of the counter and false of the page.
+
+**Fix — `generate_wiki_index.py`:**
+1. `render_template()` now emits Incidents and Pinokio / Windows 11 sections, with `--incident`
+   and `--pinokio` CSS vars and badge rules. index.html now renders 159 cards for 159 pages.
+2. New `render_index_md()` builds `wiki/index.md` from the same `pages` list that builds
+   index.html, in the same run. One pass, one source of truth — the two artefacts can no longer
+   disagree.
+3. `parse_page()` now also returns `rel_slug` and `section` (additive) so index.md can emit
+   correct wikilinks for nested pages (`pinokio/Windows 11/...`).
+4. `main()` writes both files and prints both counts.
+
+**Verified:** `python3 generate_wiki_index.py` → "159 pages (136 AI + 23 HA)" and
+"136 AI pages listed". index.html: 159 cards across 6 section types. index.md: 136 rows
+(65 sources, 28 entities, 19 concepts, 12 syntheses, 8 incidents, 4 pinokio) plus an explicit
+footer accounting for the 23 HA pages that live in `index.html` only.
+
+**Test suite was already broken and is now fixed.** `test_generate_wiki_index.py` called
+`parse_page(md, "concepts")` with two arguments, but `parse_page` has required a third
+(`section_dir`) since the `rel_slug` change. Every one of the 7 parse_page tests would have raised
+TypeError. Fixed all 7 and added 6 tests for `render_index_md` (page count, total arithmetic,
+link prefixing for incidents vs concepts, missing-summary marker, pipe escaping). 17 pass.
+
+**Tradeoff accepted.** index.md summaries now come from each page's `> summary` line rather than
+the hand-curated one-liners written into the old table. Where a page has no `> summary`, the row
+reads `_(no summary — see P3)_`. That makes P3's 73 missing summaries visible in the index instead
+of hidden behind hand-written text — deliberate, but it means index.md looks worse until the
+ingest template is fixed. Old hand-curated file preserved at `wiki/index.md.bak-20260918`
+(non-`.md` suffix, so lint passes ignore it).
+
+**Backups:** `generate_wiki_index.py.bak-20260918`, `test_generate_wiki_index.py.bak-20260918`.
+
+**Follow-on:** index.md is now generated, so the generator must run after every ingest. If it does
+not, index.md goes stale the same way it just did — the pattern from P1 again, one layer down.
+Worth wiring into the ingest step rather than leaving it to the weekly LINT.
+
+---
+
+## [2026-09-18] P3 CLOSED (detection + contract) — the missing-summary count was wrong in both directions
+
+Ref: `handoff/2026-09-17-memory-maintenance.md`, P3.
+
+**The handoff's framing was right about the cure and wrong about the disease.** "Fix the template,
+don't hand-patch" is correct. But the 73 figure was not measuring what it claimed, and the exporter
+is not the only thing broken.
+
+**Bug A — the index was inventing summaries.** `parse_page()` matched `^> ` anywhere in a file and
+took the first hit as the summary. On chat exports, which quote messages inside the transcript,
+that lifted arbitrary mid-conversation text into the index. Seven pages in `sources/` were
+affected; the worst pulled its "summary" from **line 949** of
+`claude-chat-updating-tutorial-with-project-images.md`. Those pages also counted as HAVING a
+summary, so the lint scored them as fine.
+
+**Bug B — the lint was counting generated artefacts.** The 73 figure included `wiki/feed/` (34
+daily AI feed files) and `wiki/stats/` (64 baseline dumps and JSON). Neither is a knowledge page;
+neither is in `SECTIONS`; neither is indexed. They were never supposed to carry summaries.
+
+**Corrected count: 37, not 73** — 32 `sources/`, 3 `incidents/`, 2 `entities/`. Of those, 7 were
+previously masked as present by Bug A. Scope is the six indexed sections only.
+
+**Fix:**
+1. New `extract_summary(text)` in `generate_wiki_index.py`, replacing the naive regex. Two accepted
+   forms, in precedence order: a `summary:` key in YAML frontmatter, or a `>` blockquote in the
+   header zone (before the first `## ` heading). A blockquote below the first `## ` is body content
+   and is ignored. Wrapped `>` lines are joined.
+2. New `lint_summaries.py` — imports the same `extract_summary()`, so the lint count and the index
+   can never disagree again. `--by-section` for the summary view; exits non-zero when anything is
+   missing, so it can gate an ingest.
+3. `concepts/ingest.md` gains a **Summary contract** section stating the two accepted forms, the
+   fact that body blockquotes do not count, and the `lint_summaries.py` command.
+4. 8 new tests covering both forms, precedence, line-wrapping, wikilink stripping, and specifically
+   that a blockquote below the first heading is NOT a summary. **25 pass** (was 17).
+
+**Still open — the exporter itself.** The `claude-chat-*` export path does not write `summary:`,
+and the script that produces those pages is not in either Syncthing folder (`obsidian-vault` or
+`homelab-brain`) — only its output is. It could not be fixed from this session. The contract is now
+documented and machine-checked, so the exporter has a defined target: emit `summary:` in
+frontmatter. **The 37 backfills are deliberately not done** — per the handoff, template first.
+
+**Note for the memory-architecture review:** `homelab-brain/wiki/sources/` contains 49
+`claude-chat-*` pages with the same layout and the same missing-`summary:` gap. Whatever fixes the
+exporter fixes both wikis.
+
+**Backups:** `wiki/index.md.bak-20260918`, `wiki/concepts.ingest.md.bak-20260918`,
+`generate_wiki_index.py.bak-20260918`, `test_generate_wiki_index.py.bak-20260918`.
+
+---
+
+## [2026-09-18] PATTERN FIX — standing pointer check, link skip list, single maintenance entry point
+
+Ref: `handoff/2026-09-17-memory-maintenance.md` — the root-cause pattern, and P4.
+
+### The handoff's thesis, tested
+
+It argued that five incidents shared one cause — something authoritative pointing at a stale copy —
+and that a standing check would have caught all of them. That was right, and understated.
+
+**Occurrence 6, found by writing the check: EIGHT vault scripts still hardcoded the dead iCloud
+path.** `vault.sh`, `vault-stats.sh`, `vault-nlm-sync.sh`, `semantic-clip.js`, `search-wiki.js`,
+`index-skills.js`, `optimize-vault.js`, `bin-router.js` — every one of them a live entry point,
+every one pointing at the superseded vault. The 2026-09-02 pass fixed `CLAUDE.md`, `aillmwiki.md`
+and `generate_wiki_index.py` and stopped there.
+
+**Occurrence 7: the agent profiles too.** `wiki/agents/claude-primary/project-aillmwiki.md` — the
+page that tells an agent where the vault IS — still read
+`Vault at: C:\Users\PCG1\iCloudDrive\...\Obsidian Vault AI`. Same for `user-profile.md`. Identical
+stale copies existed in `homelab-brain/wiki/agents/claude-primary/`.
+
+**All 10 fixed.** Scripts now resolve `${OBSIDIAN_VAULT:-$HOME/Sync/obsidian-vault}` with the iCloud
+path retained only as an explicitly-labelled `_ICLOUD_LEGACY` fallback. Agent profiles name the
+Syncthing path on both macOS and Win11. Originals in `.pointer-fix-backups-20260918/`.
+
+### New: `lint_pointers.py`
+
+Fails on any live reference to a superseded vault path. Deliberately narrow — it scans code and
+config (`.sh .js .py .json .ts .yml`) plus the markdown that functions as configuration
+(`wiki/agents/**`, `CLAUDE.md`, `aillmwiki.md`), and ignores prose. The first draft scanned all
+markdown and returned 52 hits in the vault and 67 in homelab-brain, almost all of them chat
+transcripts and planning docs legitimately describing the old layout. A check that cries wolf gets
+ignored, which is how this class of bug survived four rounds. Narrowed, it returns exactly the
+live pointers. **Both trees now report 0.**
+
+### P4 — `lint_links.py` and the skip list
+
+The weekly LINT's "7 orphan links" was scoped to concepts/entities/sources/syntheses only. A full
+scan finds 36. Most are not real: documentation placeholders (`[[page-name]]`, `[[concepts/...]]`
+in `schema/config.md` and `concepts/lint.md`), `log.md` quoting its own past reports, and raw chat
+transcripts under `sources/claude-chat-*`. Those source files are now excluded by category.
+
+Directory links resolve properly now — `[[Windows 11]]` finds `wiki/pinokio/Windows 11/`, and
+`[[pinokio]]` and `[[2026-09-02-torchaudio-abi-version-pin]]` resolve because incidents/ and
+pinokio/ are in scope since today's P2 fix. Three of the LINT's seven orphans were never orphans.
+
+`wiki/.lint-skip-links` is the decide-once mechanism the handoff asked for — 8 entries, each with a
+reason. Seven are Claude memory slugs that are not wiki pages (the `feedback_*` class, ruled skip
+2026-07-14 and re-reported five times since); one is `windows-defender-crash-loop`, ruled
+2026-09-03 as a page deliberately never written.
+
+**36 -> 8 real unresolved links**, all genuine gaps needing a stub-or-remove decision:
+`[[SOUL]]`, `[[agent-privilege-separation]]`, `[[hermes-agent]]`, `[[ollama]]`, `[[open-webui]]`,
+`[[pytorch]]`, `[[swiftbar-mcp-toggle]]`, `[[wikilinks]]`.
+
+### New: `maintain.py`
+
+`python3 maintain.py --fix` runs all three lints then regenerates both indexes. Exit code is the
+number of failing checks, so it can gate an ingest or run from launchd. This is the answer to the
+P2 follow-on: regeneration was left to a weekly manual pass, which is why index.md went stale in
+the first place.
+
+Current state: **pointers clean, summaries 37 open, links 8 open.** 25 tests pass.
 
 ---
