@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Syncs key wiki files from the iCloud/Obsidian vault into this repo's wiki/ and
+# Syncs key wiki files from the Syncthing Obsidian vault (~/Sync/obsidian-vault) into this repo's wiki/ and
 # wiki-personal/ directories, then commits and pushes so Claude.ai can read the
 # latest content via raw GitHub URLs.
 #
 # Usage (run from Claude Code or terminal):
 #   bash wiki/sync.sh [VAULT_PATH]
 #
-# Default vault path assumes the standard iCloud Drive / Obsidian location on macOS.
+# Default vault path is ~/Sync/obsidian-vault (Syncthing).
 # Override by passing a path as the first argument.
 
 set -euo pipefail
@@ -25,7 +25,7 @@ VAULT="$VAULT_PATH"
 
 if [ ! -d "$WIKI_SRC" ]; then
   echo "ERROR: Wiki source not found at: $WIKI_SRC"
-  echo "Set VAULT_SUBDIR env var (relative to iCloud Obsidian base), or pass full vault path as \$1."
+  echo "Pass the full vault path as \$1."
   exit 1
 fi
 
@@ -134,7 +134,7 @@ fi
 git add wiki/
 git diff --cached --quiet && echo "Nothing changed, skipping commit." && exit 0
 
-git commit -m "wiki: sync from iCloud vault ($TIMESTAMP)"
+git commit -m "wiki: sync from Syncthing vault ($TIMESTAMP)"
 
 if [ "$CURRENT_BRANCH" != "main" ]; then
   echo "WARNING: Not on main (on '$CURRENT_BRANCH')."
