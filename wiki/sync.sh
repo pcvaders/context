@@ -104,7 +104,7 @@ fi
 # them. Runs before the secret scan, which stays as the fail-closed backstop.
 # ---------------------------------------------------------------------------
 find "$WIKI_DIR" -name '*.md' -type f -print0 | xargs -0 perl -pi -e \
-  's/(?<![\d.])(?:10\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])|192\.168)\.\d{1,3}\.\d{1,3}(?![\d.]*\d)/<lan-ip>/g'
+  's/(?<![\d.])(?:10\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])|192\.168)\.\d{1,3}\.\d{1,3}(?![\d.]*\d)/<lan-ip>/g; s{ssh://[^\s`]*<lan-ip>[^\s`]*}{<lan-ssh-remote>}g'
 
 # ---------------------------------------------------------------------------
 # Commit and push — warn if not on main (Claude.ai reads from main only)
