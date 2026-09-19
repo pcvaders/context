@@ -4,6 +4,7 @@ date: "2026-04-09"
 uuid: "3b7a076a-c419-4c2d-b62d-3a805dd051e9"
 source: "claude-chat-export"
 messages: 28
+summary: "Chat opened with: Are any of the skills now in your context?"
 ---
 
 # Skills in context

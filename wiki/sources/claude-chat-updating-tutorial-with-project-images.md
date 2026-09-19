@@ -4,6 +4,7 @@ date: "2026-03-13"
 uuid: "aabf71f6-93c1-4c05-851d-9e6ee9729687"
 source: "claude-chat-export"
 messages: 119
+summary: "Chat opened with: I could add the images into the chat so I had to create a New Project and add all the images into it. Can you now update the Tutorial?"
 ---
 
 # Updating tutorial with project images

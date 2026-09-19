@@ -4,6 +4,7 @@ date: "2026-03-13"
 uuid: "3649745b-fc1d-4811-80b5-71f5490760d6"
 source: "claude-chat-export"
 messages: 17
+summary: "Chat opened with: Hi Claude, can you see if you can find me some sources to put together a tutorial from the follwing pst about creating a game character: https://x.com/insaneUEFN/status/2031406149547811118"
 ---
 
 # Game character creation tutorial sources

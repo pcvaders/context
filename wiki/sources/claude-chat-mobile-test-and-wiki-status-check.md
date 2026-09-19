@@ -4,6 +4,7 @@ date: "2026-05-31"
 uuid: "cee95070-2dde-4ddf-ba02-cd614dded432"
 source: "claude-chat-export"
 messages: 3
+summary: "Chat opened with: Mobile test today"
 ---
 
 # Mobile test and wiki status check

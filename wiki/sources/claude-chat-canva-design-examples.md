@@ -4,6 +4,7 @@ date: "2026-03-11"
 uuid: "99b094f2-ac2f-44eb-9c3d-658f08216904"
 source: "claude-chat-export"
 messages: 24
+summary: "Chat opened with: Hey Claude can you give me an example of your talents using Canva"
 ---
 
 # Canva design examples

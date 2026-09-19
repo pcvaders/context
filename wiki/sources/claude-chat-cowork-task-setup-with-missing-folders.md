@@ -4,6 +4,7 @@ date: "2026-05-20"
 uuid: "530c7728-37ac-48d8-b906-c99e70f094c2"
 source: "claude-chat-export"
 messages: 2
+summary: "Chat opened with: i am trying to setup a task in cowork, to use this project and search for clippings but i cannot see any folders etc here?"
 ---
 
 # Cowork task setup with missing folders

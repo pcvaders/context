@@ -4,6 +4,7 @@ date: "2026-05-21"
 uuid: "df908f45-73f6-4d35-8ff5-4d5ef07289a4"
 source: "claude-chat-export"
 messages: 16
+summary: "Chat opened with: Can you link up with Claude codes working task"
 ---
 
 # Finding previous Claude Code project

@@ -4,6 +4,7 @@ date: "2026-05-30"
 uuid: "cf71fd4b-5496-483c-a051-9ac74151b903"
 source: "claude-chat-export"
 messages: 2
+summary: "Chat opened with: hey chat"
 ---
 
 # Session startup triggers not activating

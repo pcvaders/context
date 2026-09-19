@@ -4,6 +4,7 @@ date: "2026-05-25"
 uuid: "f22e93f8-6f07-4ec8-a15a-52f5fa47c015"
 source: "claude-chat-export"
 messages: 8
+summary: "Chat opened with: so i just found this in our past chats today, can you give me an update for it as there is nothing in the Notebooklm? Perfect! Let me create an 'AI Memory NotebookLM' for tracking our conversations…"
 ---
 
 # AI memory NotebookLM update

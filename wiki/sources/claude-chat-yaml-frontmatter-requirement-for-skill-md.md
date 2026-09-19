@@ -4,6 +4,7 @@ date: "2026-03-26"
 uuid: "433f95bb-32eb-407e-aa6b-dfae854ab28f"
 source: "claude-chat-export"
 messages: 0
+summary: "Empty conversation export (0 messages)."
 ---
 
 # YAML frontmatter requirement for SKILL.md

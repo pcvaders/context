@@ -4,6 +4,7 @@ date: "2026-05-23"
 uuid: "f2466de1-a426-44db-9119-253910e248ea"
 source: "claude-chat-export"
 messages: 18
+summary: "Chat opened with: hi there have you got the new updates from today?"
 ---
 
 # Today's new updates

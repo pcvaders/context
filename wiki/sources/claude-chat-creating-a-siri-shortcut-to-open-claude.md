@@ -4,6 +4,7 @@ date: "2026-05-31"
 uuid: "f1faf3a0-bad3-4a70-8802-76d3c745563f"
 source: "claude-chat-export"
 messages: 8
+summary: "Chat opened with: Hey, Claude. Is there a way of linking up a Siri or developing a new shortcut to just open your chat system?"
 ---
 
 # Creating a Siri shortcut to open Claude

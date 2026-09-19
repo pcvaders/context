@@ -4,6 +4,7 @@ date: "2026-05-16"
 uuid: "b8c35e20-30f9-41e2-ab40-609837badac5"
 source: "claude-chat-export"
 messages: 4
+summary: "Chat opened with: Hey Claude, could you summarize my top projects this quarter? Use any connector that would be helpful, and get started once you've gathered enough info. If it makes sense, create something we can…"
 ---
 
 # Quarterly projects summary

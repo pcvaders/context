@@ -4,6 +4,7 @@ date: "2026-05-15"
 uuid: "feee0eb4-3abc-47a7-bdf5-ba4e175f840f"
 source: "claude-chat-export"
 messages: 33
+summary: "Chat opened with: /banana-pro-director create a prompt for AI image creation using GPT 2 and Nano Banana 2 and Pro to convert this dog into an Isle of Dogs Puppet with 4 different scales"
 ---
 
 # Dog to Isle of Dogs puppet conversion prompt

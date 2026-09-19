@@ -4,6 +4,7 @@ date: "2026-02-24"
 uuid: "abfc110f-4ea7-464c-993d-c454e53756b2"
 source: "claude-chat-export"
 messages: 6
+summary: "Chat opened with: can you draw me a complete network of how a Homeassistant server would work with recommended smart switches, hubs, extensions etc"
 ---
 
 # Home Assistant network architecture and smart device setup

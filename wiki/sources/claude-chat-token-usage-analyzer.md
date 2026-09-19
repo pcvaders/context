@@ -4,6 +4,7 @@ date: "2026-05-19"
 uuid: "2b0216dc-6534-469b-9e42-6c0cd3e28b45"
 source: "claude-chat-export"
 messages: 4
+summary: "Chat opened with: /token-usage-analyzer"
 ---
 
 # Token usage analyzer

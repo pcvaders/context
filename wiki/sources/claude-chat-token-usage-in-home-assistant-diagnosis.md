@@ -4,6 +4,7 @@ date: "2026-04-09"
 uuid: "4359ca94-6efe-4233-b18e-537b348d489a"
 source: "claude-chat-export"
 messages: 4
+summary: "Chat opened with: can you show me how we used up all of my tokens after just a home assistant diagnosis?"
 ---
 
 # Token usage in home assistant diagnosis

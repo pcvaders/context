@@ -4,6 +4,7 @@ date: "2026-03-17"
 uuid: "3343de18-ec5d-4d63-ad9a-1f65214b283d"
 source: "claude-chat-export"
 messages: 4
+summary: "Chat opened with: can you see my home assistant"
 ---
 
 # Home Assistant visibility

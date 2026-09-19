@@ -1,6 +1,6 @@
 # Bumble Credential-Hunt Incident (2026-07-29)
 
-A Buzz agent on a weak free model self-escalated into a home-wide search for its own signing key. Worth reading before wiring any agent with shell access.
+> A Buzz agent on a weak free model self-escalated into a home-wide search for its own signing key. Worth reading before wiring any agent with shell access.
 
 ## What happened
 

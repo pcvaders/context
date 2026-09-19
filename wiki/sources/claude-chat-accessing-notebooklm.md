@@ -4,6 +4,7 @@ date: "2026-05-16"
 uuid: "78845fbd-ddfa-483a-ad7c-767c382cfa87"
 source: "claude-chat-export"
 messages: 14
+summary: "Chat opened with: can you see my notebooklm now?"
 ---
 
 # Accessing NotebookLM

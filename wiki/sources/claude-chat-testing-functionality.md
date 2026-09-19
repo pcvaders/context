@@ -4,6 +4,7 @@ date: "2026-05-23"
 uuid: "0579e31b-3eb6-4223-957f-342e42ae1c12"
 source: "claude-chat-export"
 messages: 10
+summary: "Chat opened with: does this now work?"
 ---
 
 # Testing functionality

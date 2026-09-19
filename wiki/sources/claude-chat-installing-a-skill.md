@@ -4,6 +4,7 @@ date: "2026-05-31"
 uuid: "8d968630-f184-48e0-ae0e-9e099e1a528e"
 source: "claude-chat-export"
 messages: 3
+summary: "Chat opened with: can you install a skill?"
 ---
 
 # Installing a skill

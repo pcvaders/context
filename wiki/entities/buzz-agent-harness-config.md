@@ -1,6 +1,6 @@
 # Buzz.app Agent Harness Config (0.5.0)
 
-How to wire Buzz agents to external ACP backends, and the traps. Verified 2026-07-29 on Buzz v0.5.0. Full identity rotation done 2026-07-29 — all agents rebuilt post-wipe.
+> How to wire Buzz agents to external ACP backends, and the traps. Verified 2026-07-29 on Buzz v0.5.0. Full identity rotation done 2026-07-29 — all agents rebuilt post-wipe.
 
 Live agents (post-rotation, all verified responsive):
 

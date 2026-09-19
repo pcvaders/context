@@ -4,6 +4,7 @@ date: "2026-05-14"
 uuid: "1ee3b14b-9cb9-43c1-ab39-b400df546b2b"
 source: "claude-chat-export"
 messages: 10
+summary: "Chat opened with: rate this prompt: Full-body shot of a handcrafted Border Terrier stop-motion puppet, wearing a faded blue knitted beanie pulled low over one ear, Wes Anderson's Isle of Dogs aesthetic. Meticulous…"
 ---
 
 # Stop-motion Border Terrier prompt rating

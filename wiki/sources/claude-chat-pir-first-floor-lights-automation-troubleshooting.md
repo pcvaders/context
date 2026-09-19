@@ -4,6 +4,7 @@ date: "2026-04-07"
 uuid: "25ddc027-4feb-4d3b-83c3-4949b6320f11"
 source: "claude-chat-export"
 messages: 14
+summary: "Chat opened with: i created a new automation for the pir 1st floor lights, but now the lights refuse to come on, can you run a diags?"
 ---
 
 # PIR first floor lights automation troubleshooting

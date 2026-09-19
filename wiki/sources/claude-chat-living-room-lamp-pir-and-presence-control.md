@@ -4,6 +4,7 @@ date: "2026-04-14"
 uuid: "0c342e74-092e-4433-8454-7c3e93e179d2"
 source: "claude-chat-export"
 messages: 8
+summary: "Chat opened with: can you check the new automation: Living Room Lamp - PIR & Presence Control it did not switch the tv or lamp on when i enabled it."
 ---
 
 # Living room lamp PIR and presence control

@@ -4,6 +4,7 @@ date: "2026-03-11"
 uuid: "b5ebcbb9-3541-451d-bea9-eb1d27f230fc"
 source: "claude-chat-export"
 messages: 210
+summary: "Chat opened with: So can you help perform a clean install of Immich on my Lenovo Proxmox?"
 ---
 
 # Clean install of Immich on Proxmox

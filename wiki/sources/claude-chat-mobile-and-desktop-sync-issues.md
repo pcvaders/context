@@ -4,6 +4,7 @@ date: "2026-05-22"
 uuid: "db6d89a1-b7ea-4474-9530-08b8698b6661"
 source: "claude-chat-export"
 messages: 36
+summary: "Chat opened with: Hi Claude any idea why everything on the mobile is not syncing up from the desktop"
 ---
 
 # Mobile and desktop sync issues

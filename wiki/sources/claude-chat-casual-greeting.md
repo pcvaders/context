@@ -4,6 +4,7 @@ date: "2026-05-26"
 uuid: "98545f0e-47df-4099-854e-c66845475fa4"
 source: "claude-chat-export"
 messages: 26
+summary: "Chat opened with: hey Claude hows things with you today?"
 ---
 
 # Casual greeting

@@ -4,6 +4,7 @@ date: "2026-04-05"
 uuid: "b32e465d-b872-43d2-80a7-d813140e8800"
 source: "claude-chat-export"
 messages: 22
+summary: "Chat opened with: I found this problem on the PIR lights 1st floor"
 ---
 
 # PIR lights first floor issue

@@ -4,6 +4,7 @@ date: "2026-04-05"
 uuid: "a8afb0b8-6a8f-4945-9d9a-649461621b60"
 source: "claude-chat-export"
 messages: 0
+summary: "Empty conversation export (0 messages)."
 ---
 
 # Untitled Conversation

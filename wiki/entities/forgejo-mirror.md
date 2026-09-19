@@ -9,7 +9,7 @@ created: 2026-06-20
 
 ## Status
 
-**Code DONE + committed** (12 scripts lint-clean). Not yet installed on host — needs credentials in macOS Keychain, then `bash install.sh`. Designed 2026-06-02, revisited 2026-06-12 session. [unsourced: exact install-run date — never executed as of 2026-06-20]
+**LIVE since 2026-06-14** — built via `install.sh` on Proxmox LXC 106 and running as the PRIMARY git host (admin user `voyager1`; orgs `personal` + `ai`; daily 04:00 `forgejo-dump` → Google Drive). Verified 2026-09-18: `GET /api/v1/version` → `15.0.3+gitea-1.22.0`; `~/claude-skills` pushes to it. Source: `homelab-brain/memory/mac-m3/project_forgejo_mirror.md`. (Earlier text here said "not yet installed … never executed as of 2026-06-20" — wrong since 2026-06-14.)
 
 ## Why it exists
 

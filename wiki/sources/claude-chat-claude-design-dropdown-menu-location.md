@@ -4,6 +4,7 @@ date: "2026-05-21"
 uuid: "4cb4beba-6248-4b34-9254-fad58b4a61fa"
 source: "claude-chat-export"
 messages: 8
+summary: "Chat opened with: can you tell me where the dropdown menu is for claude design?"
 ---
 
 # Claude design dropdown menu location
