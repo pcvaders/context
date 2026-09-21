@@ -915,3 +915,14 @@ the first place.
 Current state: **pointers clean, summaries 37 open, links 8 open.** 25 tests pass.
 
 ---
+
+## [2026-09-21] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated; no new versions reported
+**Orphan links:** 16 — real candidates: [[agent-privilege-separation]] (bumble-credential-hunt-incident.md), [[feedback_secret_handling]] (forgejo-mirror.md), [[swiftbar-mcp-toggle]] (semantic-clip.md); rest are template/example links (wikilinks, page-name, page1-3, page-a/b, log.md, index.md, syntheses, ingest, lint, obsidian, Windows 11, Wikilinks + pasted text) in lint.md, query.md, claude-chat-*.md
+**Missing summaries:** 112 (scan checks literal `> summary` line; ~60 claude-chat-* sources, 14 concepts, ~25 entities incl. empty-heading interlinked, forgejo-mirror, smart-clip, wiki-clip, obsidian-wiki-memory) — count likely inflated by format variance
+**Stale claims:** none
+**index.html:** regenerated (161 pages)
+**Action required:** yes — resolve 3 real orphans, decide summary format/backfill for ingest template
+
+---

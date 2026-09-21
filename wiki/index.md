@@ -39,10 +39,11 @@
 
 ## Entities
 
-*28 pages*
+*31 pages*
 
 | Page | Summary |
 |---|---|
+| [[agentic-os]] | Unified homelab command center and agent operating dashboard serving telemetry, 3D connectome, multi-theme runtime, and living animations. |
 | [[amuseai-vertex-integration]] | TensorStack AmuseAI has no native pipeline for Gemini/Imagen/Veo — custom Python files reroute those model slots through Vertex AI (gcloud ADC), working as of 2026-06-11. |
 | [[bumble-credential-hunt-incident]] | A Buzz agent on a weak free model self-escalated into a home-wide search for its own signing key. Worth reading before wiring any agent with shell access. |
 | [[buzz-agent-harness-config]] | How to wire Buzz agents to external ACP backends, and the traps. Verified 2026-07-29 on Buzz v0.5.0. Full identity rotation done 2026-07-29 — all agents rebuilt post-wipe. |
@@ -51,6 +52,7 @@
 | [[comfyui-pinokio-blackwell]] | Two ComfyUI installs live side by side under Pinokio on Win11: the original (untouched) and an updated clone built for RTX 50-series (Blackwell) with SageAttention. |
 | [[cutmaster-ai-davinci-tools]] | `davinci-tools.html` dashboard wired to a 284-tool `cutmaster_ai` backend; verified end-to-end via a real DaVinci Resolve timeline cut on 2026-06-13. Known gap: ffmpeg not on PATH. |
 | [[cutmaster-ai-git-hosting]] | cutmaster-ai's GitHub account was suspended; hosting moved to Codeberg (Forgejo) under a new username. Push auth from this Win11 machine is still unresolved. |
+| [[deepseek-harness]] | Local AI inference and orchestration harness running on port 3080 routing DeepSeek reasoning and coding models. |
 | [[forgejo-mirror]] | Self-hosted Forgejo on Proxmox LXC 106 that mirrors both GitHub accounts, cross-mirrors them, and pushes offsite to Google Drive — four independent copies of every repo. LAN-only. (as of 2026-06) |
 | [[homelab]] | summary: voyager1's multi-machine Proxmox/Mac/Win11 fleet — the umbrella entity referenced across infra pages. |
 | [[interlinked]] | Claude Code skill that activates the AI LLM Wiki assistant persona — handles INGEST, QUERY, and LINT operations on the vault. |
@@ -65,6 +67,7 @@
 | [[pcg1-directors-prep]] | summary: Prep/reference materials entity referenced from the ComfyUI master synthesis page. |
 | [[pinecone]] | Managed vector database service — primary alternative to local embeddings for RAG pipelines at scale. |
 | [[proxmox]] | summary: Virtualization host running the homelab's LXC containers (Forgejo, n8n, recall-server, etc.). |
+| [[reachy-mini]] | Robotics platform and autonomous AI Radio DJ integrating Spotify Connect, multi-sink audio routing, and expressive head kinematics. |
 | [[renderzero-vertex-patch]] | Placeholders: replace `YOUR_PROJECT` with your GCP project id and `YOUR_ACCOUNT` with your Google account. Do not commit real values. |
 | [[semantic-clip]] | Local CLI tool that replaces smart-connections-mcp — reads pre-computed `.smart-env/` embeddings directly for zero-network, zero-MCP semantic vault search. |
 | [[smart-clip]] | Three-tier local search orchestrator: keyword → semantic → NotebookLM fallback over the AI LLM Wiki vault. |
@@ -193,6 +196,6 @@
 
 ---
 
-Generated 2026-09-21 by `generate_wiki_index.py`. 138 AI pages listed above + 23 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **161 total**.
+Generated 2026-09-21 by `generate_wiki_index.py`. 141 AI pages listed above + 23 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **164 total**.
 
 Regenerate with `python3 generate_wiki_index.py` from the vault root. Hand edits will be overwritten.
