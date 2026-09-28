@@ -926,3 +926,14 @@ Current state: **pointers clean, summaries 37 open, links 8 open.** 25 tests pas
 **Action required:** yes — resolve 3 real orphans, decide summary format/backfill for ingest template
 
 ---
+
+## [2026-09-28] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated; no new versions reported
+**Orphan links:** none (lint_links.py: 0 unresolved, 15 skipped via .lint-skip-links)
+**Missing summaries:** none (lint_summaries.py: 164/164 pages have summary)
+**Stale claims:** none (42 `(as of YYYY-MM)` tags, all within 6 months of 2026-09-28)
+**index.html:** regenerated (164 pages: 141 AI + 23 HA)
+**Action required:** no — all maintain.py checks clean (pointers, summaries, links, public)
+
+---
