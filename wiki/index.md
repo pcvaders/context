@@ -39,7 +39,7 @@
 
 ## Entities
 
-*31 pages*
+*32 pages*
 
 | Page | Summary |
 |---|---|
@@ -55,6 +55,7 @@
 | [[deepseek-harness]] | Local AI inference and orchestration harness running on port 3080 routing DeepSeek reasoning and coding models. |
 | [[forgejo-mirror]] | Self-hosted Forgejo on Proxmox LXC 106 that mirrors both GitHub accounts, cross-mirrors them, and pushes offsite to Google Drive — four independent copies of every repo. LAN-only. (as of 2026-06) |
 | [[homelab]] | summary: voyager1's multi-machine Proxmox/Mac/Win11 fleet — the umbrella entity referenced across infra pages. |
+| [[immich]] | High-performance self-hosted photo and video management platform running on Proxmox P330 with dedicated NVMe storage and Agentic OS integration. |
 | [[interlinked]] | Claude Code skill that activates the AI LLM Wiki assistant persona — handles INGEST, QUERY, and LINT operations on the vault. |
 | [[isle-of-dogs-project]] | summary: Stop-motion-style AI film project (puppet conversion, character work) referenced from the Higgsfield pipeline notes. |
 | [[julius-brussee]] | Creator of the caveman token compression skill and the broader caveman ecosystem for LLM agents. |
@@ -196,6 +197,6 @@
 
 ---
 
-Generated 2026-10-04 by `generate_wiki_index.py`. 141 AI pages listed above + 23 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **164 total**.
+Generated 2026-10-04 by `generate_wiki_index.py`. 142 AI pages listed above + 23 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **165 total**.
 
 Regenerate with `python3 generate_wiki_index.py` from the vault root. Hand edits will be overwritten.

@@ -43,5 +43,6 @@ An authentic Studio Ghibli procedural Canvas 2D animation engine running strictl
 ## Related
 
 - [[homelab]] — fleet architecture and host topology
+- [[immich]] — self-hosted photo service console embedded in dashboard
 - [[litellm-proxy]] — model routing proxy powering dashboard AI agents
 - [[claude-code]] — primary development engine for homelab tooling
