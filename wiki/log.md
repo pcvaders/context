@@ -937,3 +937,14 @@ Current state: **pointers clean, summaries 37 open, links 8 open.** 25 tests pas
 **Action required:** no — all maintain.py checks clean (pointers, summaries, links, public)
 
 ---
+
+## [2026-10-05] LINT — Weekly maintenance
+
+**Plugin updates:** 5 marketplaces updated; no new versions reported; antigravity-awesome-skills could not be refreshed (see --debug)
+**Orphan links:** none (maintain.py: 0 unresolved, 15 skipped via .lint-skip-links)
+**Missing summaries:** none (165/165 pages have summary)
+**Stale claims:** none (42 `(as of YYYY-MM)` tags, oldest 2026-05, all within 6 months of 2026-10-05)
+**index.html:** regenerated (165 pages: 142 AI + 23 HA)
+**Action required:** no — optional: check why antigravity-awesome-skills marketplace refresh fails
+
+---
