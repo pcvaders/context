@@ -197,6 +197,6 @@
 
 ---
 
-Generated 2026-10-08 by `generate_wiki_index.py`. 142 AI pages listed above + 24 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **166 total**.
+Generated 2026-10-09 by `generate_wiki_index.py`. 142 AI pages listed above + 24 Home Assistant pages in `wiki-ha/` (indexed in `index.html`, not listed here) = **166 total**.
 
 Regenerate with `python3 generate_wiki_index.py` from the vault root. Hand edits will be overwritten.
